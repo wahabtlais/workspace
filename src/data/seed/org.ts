@@ -5,7 +5,7 @@ const s = (vals: number[]) => vals.map((value, i) => ({ period: `${P[i]} 2026`, 
 
 export const indicators: Indicator[] = [
   { id: "ind-su-reach", code: "SU-01", name: "Pupils reached in partner schools", program: "SU", unit: "#", target: 900, baseline: 610, series: s([640, 640, 640, 702, 778, 790]), source: "Class rosters (School Upskilling)", ownerId: "s-mira", grantIds: ["gr-1", "gr-2"] },
-  { id: "ind-su-gain", code: "SU-02", name: "Average pupil learning gain (pre → post, points)", program: "SU", unit: "score", target: 20, baseline: 14, series: s([22.1, 22.1, 22.1, 22.1, 22.1, 22.1]), source: "Assessment Hub: pupil pre/post 2025–26", ownerId: "s-mira", grantIds: ["gr-1"] },
+  { id: "ind-su-gain", code: "SU-02", name: "Average pupil learning gain (pre → post, points)", program: "SU", unit: "score", target: 20, baseline: 14, series: s([22.4, 22.4, 22.4, 22.4, 22.4, 22.4]), source: "Assessment Hub: pupil pre/post 2025–26", ownerId: "s-mira", grantIds: ["gr-1"] },
   { id: "ind-su-att", code: "SU-03", name: "Pupil classroom attendance rate", program: "SU", unit: "%", target: 85, baseline: 80, series: s([0, 0, 0, 0, 88, 86]), source: "Attendance service: pupil registers (aggregated)", ownerId: "s-mira", grantIds: ["gr-1"] },
   { id: "ind-su-reg", code: "SU-04", name: "Class register completion rate", program: "SU", unit: "%", target: 95, baseline: 90, series: s([0, 0, 0, 0, 96, 93]), source: "Attendance service: scheduled vs submitted registers", ownerId: "s-mira", grantIds: [] },
   { id: "ind-su-cert", code: "SU-05", name: "Teaching Fellows certified (cumulative)", program: "SU", unit: "#", target: 26, baseline: 0, series: s([12, 12, 12, 12, 12, 12]), source: "SU certification decisions", ownerId: "s-maya", grantIds: ["gr-1", "gr-2"] },

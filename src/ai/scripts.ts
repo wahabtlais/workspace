@@ -71,7 +71,7 @@ export function runScript(prompt: string, persona: Persona, data: DemoData): AIR
     return {
       agent: "Reporting & Insights Agent",
       steps: ["Gathering indicators", "Collecting evidence and recent activity", "Drafting sections", "Checking every figure against its source"],
-      answer: ["Draft ready for your review. Highlights:", "• Pupils reached: 790 of 900 target (88%)", "• Average learning gain 2025–26: +22.1 points (target +20)", "• TFs certified: 12 (cohort 2026–27 in training)", "Every figure links to its indicator. The draft stays a draft until a person approves it."],
+      answer: ["Draft ready for your review. Highlights:", "• Pupils reached: 790 of 900 target (88%)", "• Average learning gain 2025–26: +22.4 points (target +20)", "• TFs certified: 12 (cohort 2026–27 in training)", "Every figure links to its indicator. The draft stays a draft until a person approves it."],
       sources: ["Results & Indicators: SU-01, SU-02, SU-05", "Evidence library", "Grant gr-1 template"],
       proposedAction: { label: "Open draft for editing", kind: "task" },
     };
