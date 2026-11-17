@@ -8,21 +8,19 @@ import { Badge } from "@/components/ui/badge";
 import { useDemo } from "@/store/demoStore";
 import { useData, usePersona } from "@/store/hooks";
 import { toast, useUI } from "@/store/uiStore";
-import { DEMO_TODAY } from "@/lib/utils";
 
 interface Turn { id: number; prompt: string; run: AIRun; stepsDone: number; done: boolean; actionTaken?: boolean }
 
 function useAskEngine() {
   const persona = usePersona();
   const data = useData();
-  const update = useDemo((s) => s.update);
   const addInbox = useDemo((s) => s.addInbox);
   const [turns, setTurns] = useState<Turn[]>([]);
   const counter = useRef(0);
 
   const ask = (prompt: string) => {
     const id = ++counter.current;
-    const run = runScript(prompt, persona, data);
+    const run = runScript(prompt, persona, data, useUI.getState().askContext);
     setTurns((t) => [...t, { id, prompt, run, stepsDone: 0, done: false }]);
     run.steps.forEach((_, i) => {
       window.setTimeout(() => setTurns((t) => t.map((x) => (x.id === id ? { ...x, stepsDone: i + 1 } : x))), 450 * (i + 1));
@@ -33,21 +31,9 @@ function useAskEngine() {
   const takeAction = (turn: Turn) => {
     const a = turn.run.proposedAction;
     if (!a) return;
-    if (a.kind === "request") {
-      const reqId = `REQ-${String(data.requests.length + 1).padStart(4, "0")}`;
-      update((d) => {
-        d.requests.unshift({
-          id: reqId, type: "Equipment", title: "Laptop for the new trainer", requesterId: persona.staffId ?? "s-ziad", createdAt: DEMO_TODAY, amount: 950,
-          details: "Prepared by Ask CodeBrave from a sentence and confirmed by the requester.",
-          chain: [{ role: "su_pm", label: "Line manager", status: "pending" }, { role: "ops_hr", label: "Operations", status: "waiting" }], status: "In approval",
-        });
-      });
-      addInbox({ toRole: "su_pm", kind: "approval", title: `Approve: Laptop for the new trainer (${reqId})`, detail: `Requested by ${persona.name} via Ask CodeBrave`, link: "/operations/requests", source: "Operations & HR" });
-      toast({ tone: "success", title: `${reqId} submitted`, body: "Sent to the line manager for approval. You’ll be notified at each step." });
-    } else {
-      addInbox({ toPersona: persona.id, kind: "task", title: a.label, detail: `Created from Ask CodeBrave · ${turn.run.agent}`, link: "/ask/runs", source: "Ask CodeBrave" });
-      toast({ tone: "ai", title: "Added to your Inbox", body: a.label });
-    }
+    const msg = a.apply();
+    toast({ tone: "ai", title: "Done (simulated)", body: msg });
+    addInbox({ toPersona: persona.id, kind: "task", title: `Review: ${a.label}`, detail: `Created from Ask CodeBrave · ${turn.run.agent}`, link: "/ask/runs", source: "Ask CodeBrave" });
     setTurns((t) => t.map((x) => (x.id === turn.id ? { ...x, actionTaken: true } : x)));
   };
 
@@ -147,7 +133,7 @@ export function AskPanel() {
             <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask in your own words…" className="h-8 flex-1 bg-transparent text-sm outline-none" aria-label="Ask CodeBrave" />
             <Button type="submit" size="icon-sm" className="bg-ai-600 hover:bg-ai-700" aria-label="Send"><ArrowUp /></Button>
           </div>
-          <p className="mt-1.5 text-center text-[11px] text-subtle">Prototype: responses are scripted over fictional data. Agents never see safeguarding records.</p>
+          <p className="mt-1.5 text-center text-[11px] text-subtle">Simulated AI: scripted responses computed from the fictional records. Proposed actions run only after you confirm. Agents never see safeguarding records.</p>
         </form>
       </SheetContent>
     </Dialog.Root>
