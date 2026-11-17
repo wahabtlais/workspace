@@ -7,7 +7,8 @@ import { Assistant, Privacy, StudentAnnouncements } from "@/pages/portals/studen
 import { MyTraining, MyTrainingAttendance, TFAssessments } from "@/pages/portals/tf/TFPages";
 import { Certificate, Coaching, Deployment, TFResources } from "@/pages/portals/tf/TFPages2";
 import { ClientFeedback, ClientMilestones, HostCandidates, HostInterns, HostOpenings } from "@/pages/portals/PartnerPages";
-import { DonorIndicators, DonorMilestones, DonorReports, TeacherHelp } from "@/pages/portals/PartnerPages2";
+import { DonorIndicators, DonorMilestones, TeacherHelp } from "@/pages/portals/PartnerPages2";
+import { DonorReportsLive } from "@/pages/portals/PartnerPages2a";
 
 export const teacherRoutes: RouteObject[] = [
   { path: "classes", element: <MyClasses base="/teacher" /> },
@@ -47,7 +48,7 @@ export const partnerRoutes: RouteObject[] = [
   { path: "openings", element: <HostOpenings /> },
   { path: "candidates", element: <HostCandidates /> },
   { path: "interns", element: <HostInterns /> },
-  { path: "reports", element: <DonorReports /> },
+  { path: "reports", element: <DonorReportsLive /> },
   { path: "indicators", element: <DonorIndicators /> },
   { path: "milestones", element: <DonorMilestones /> },
 ];

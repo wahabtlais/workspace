@@ -10,11 +10,10 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { AIAction } from "@/components/shell/AskPanel";
 import { ExecPanel } from "@/pages/staff/home/panelsSU";
 import { MiniTable } from "@/pages/staff/home/widgets";
-import { useDemo } from "@/store/demoStore";
-import { toast } from "@/store/uiStore";
 import { useData, useLookup, usePersona } from "@/store/hooks";
 import { formatDate, relativeDay } from "@/lib/utils";
 import { useLiveIndicators } from "@/lib/indicators";
+import { decideDecision } from "@/store/execActions";
 
 
 export function ExecOverview() {
@@ -65,12 +64,7 @@ export function Decisions() {
   const d = useData();
   const L = useLookup();
   const persona = usePersona();
-  const update = useDemo((s) => s.update);
-  const decide = (x: Decision, status: Decision["status"]) => {
-    update((dd) => { dd.decisions.find((y) => y.id === x.id)!.status = status; dd.inbox.forEach((i) => { if (i.toRole === "exec" && i.kind === "approval" && i.title.includes(x.title.split(":")[1]?.trim().slice(0, 12) ?? "§")) i.status = "done"; }); });
-    useDemo.getState().notify({ toRole: x.requestedBy === "s-joelle" ? "fundraising" : x.requestedBy === "s-maya" ? "su_pm" : "ops_hr", text: `Decision ${status.toLowerCase()}: ${x.title}`, tone: status === "Approved" ? "success" : "info" });
-    toast({ tone: status === "Approved" ? "success" : "info", title: `Decision ${status.toLowerCase()}`, body: "The requester was notified and the decision log updated." });
-  };
+  const decide = (x: Decision, status: Decision["status"]) => decideDecision(x.id, status);
   const canDecide = persona.role === "exec";
   return (
     <Workspace area="executive" title="Decisions" description="Everything waiting on leadership, with context and one-click decide.">
