@@ -6,12 +6,14 @@ import { buildProgress, buildSubmissions, competencies, courses, curricula, lmsA
 import { buildAssessmentSessions, buildPupilResults, forms } from "./assessments";
 import { decisions, grants, indicators, kb, obligations, opportunities, priorities, risks } from "./org";
 import { activity, inbox, notifications, requests } from "./work";
+import * as extra from "./extra";
 
 /** Builds a fresh, deep-copied baseline dataset. Used on first load and by Reset Demo. */
 export function buildSeed(): DemoData {
   const activeFb = students.filter((s) => s.cohortId === "fbc-2" && s.status === "Active");
   const cohort2 = tfs.filter((t) => t.cohortId === "tfc-2").map((t) => t.id);
   const data: DemoData = {
+    ...extra,
     staff, schools, schoolTeachers, classes, pupils, tfCohorts, tfs, trainingSessions, visits,
     followUps: [...suFollowUps, ...fbFollowUps],
     fbCohorts, students, applicants, fbSessions,

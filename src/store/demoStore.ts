@@ -123,7 +123,7 @@ export const useDemo = create<DemoState>()(
       logActivity: (e) => set((s) => { s.data.activity.unshift({ ...e, id: uid("ac"), at: nowIso() }); }),
     })),
     {
-      name: "codebrave-demo-v1",
+      name: "codebrave-demo-v2",
       storage: createJSONStorage(() => sessionStorage),
       partialize: (s) => ({ data: s.data, personaId: s.personaId, offline: s.offline, syncQueue: s.syncQueue, lang: s.lang }),
     },

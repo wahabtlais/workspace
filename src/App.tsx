@@ -15,6 +15,8 @@ import TFHome from "@/pages/portals/TFHome";
 import TeacherToday from "@/pages/portals/TeacherToday";
 import PartnerHome from "@/pages/portals/PartnerHome";
 import PortalSection from "@/pages/portals/PortalSection";
+import { staffRoutes } from "@/routes";
+import { partnerRoutes, studentRoutes, teacherRoutes, tfRoutes } from "@/routes/portals";
 
 function Root() {
   return (
@@ -38,11 +40,11 @@ const router = createBrowserRouter([
   {
     element: <Root />,
     children: [
-      { path: "/", element: <StaffLayout />, children: [{ index: true, element: <Home /> }, { path: "inbox", element: <Inbox /> }, { path: "*", element: <SectionPage /> }] },
-      { path: "/student", element: <PortalLayout surface="student" title="Future Builders · Student Portal" nav={STUDENT_NAV} />, children: [{ index: true, element: <StudentHome /> }, { path: "*", element: <PortalSection /> }] },
-      { path: "/tf", element: <PortalLayout surface="tf" title="TF Learning Portal" nav={TF_NAV} />, children: [{ index: true, element: <TFHome /> }, { path: "*", element: <PortalSection /> }] },
-      { path: "/teacher", element: <PortalLayout surface="teacher" title="Class Teacher" nav={TEACHER_NAV} bilingual />, children: [{ index: true, element: <TeacherToday /> }, { path: "*", element: <PortalSection /> }] },
-      { path: "/partner", element: <PartnerLayout />, children: [{ index: true, element: <PartnerHome /> }, { path: "*", element: <PortalSection /> }] },
+      { path: "/", element: <StaffLayout />, children: [{ index: true, element: <Home /> }, { path: "inbox", element: <Inbox /> }, ...staffRoutes, { path: "*", element: <SectionPage /> }] },
+      { path: "/student", element: <PortalLayout surface="student" title="Future Builders · Student Portal" nav={STUDENT_NAV} />, children: [{ index: true, element: <StudentHome /> }, ...studentRoutes, { path: "*", element: <PortalSection /> }] },
+      { path: "/tf", element: <PortalLayout surface="tf" title="TF Learning Portal" nav={TF_NAV} />, children: [{ index: true, element: <TFHome /> }, ...tfRoutes, { path: "*", element: <PortalSection /> }] },
+      { path: "/teacher", element: <PortalLayout surface="teacher" title="Class Teacher" nav={TEACHER_NAV} bilingual />, children: [{ index: true, element: <TeacherToday /> }, ...teacherRoutes, { path: "*", element: <PortalSection /> }] },
+      { path: "/partner", element: <PartnerLayout />, children: [{ index: true, element: <PartnerHome /> }, ...partnerRoutes, { path: "*", element: <PortalSection /> }] },
     ],
   },
 ]);

@@ -707,7 +707,40 @@ export interface ActivityEvent {
   link?: string;
 }
 
+/* ---------------- Supporting records (Phase B) ---------------- */
+
+export interface Asset { id: string; tag: string; type: "Laptop" | "Tablet" | "Projector" | "Router" | "Phone"; model: string; status: "Available" | "On loan" | "In repair" | "Retired"; holder?: string; location: string; dueBack?: string }
+export interface LeaveEntry { id: string; staffId: string; type: "Annual" | "Sick" | "Training" | "Unpaid"; from: string; to: string; status: "Approved" | "Pending" }
+export interface Meeting { id: string; title: string; date: string; attendees: string[]; agenda: { item: string; source: string }[]; decisions: string[]; followUps: { text: string; ownerId: string; done: boolean }[]; status: "Upcoming" | "Held" }
+export interface EvidenceItem { id: string; title: string; kind: "Story" | "Photo" | "Quote" | "Document"; program: Program; indicatorIds: string[]; consent: "Consented" | "Pending" | "Not required"; addedBy: string; date: string; excerpt: string }
+export interface Resource { id: string; title: string; kind: "Video" | "Slides" | "Document" | "Dataset" | "Starter code"; collection: Program; objectiveIds: string[]; updatedAt: string }
+export interface TrainerFeedback { id: string; curriculumId: string; lessonTitle: string; trainerId: string; rating: number; theme: "Timing" | "Difficulty" | "Materials" | "Engagement"; comment: string; date: string }
+export interface BacklogItem { id: string; curriculumId: string; title: string; source: string; priority: "High" | "Medium" | "Low"; status: "Idea" | "Planned" | "In next version" | "Done" }
+export interface Announcement { id: string; env: "FB" | "TF"; title: string; body: string; authorId: string; date: string }
+export interface MentorSession { id: string; mentorId: string; studentId: string; date: string; focus: string; notes: string }
+export interface AuditEntry { id: string; at: string; actor: string; action: string; target: string; dataClass: DataClass }
+export interface TemplateDoc { id: string; name: string; category: "Agreement" | "Certificate" | "Report" | "Letter"; fields: string[]; updatedAt: string }
+export interface DocumentRec { id: string; title: string; context: string; type: "Google Doc" | "PDF" | "Sheet"; ownerId: string; updatedAt: string; access: string }
+export interface SafeguardingCase { id: string; opened: string; category: string; program: Program; status: "Open" | "In follow-up" | "Closed"; leadId: string; actions: number }
+export interface Vacancy { id: string; title: string; department: Staff["department"]; candidates: { name: string; stage: "Applied" | "Screening" | "Interview" | "Offer" | "Hired" }[]; status: "Open" | "Closed" }
+export interface OnboardingRec { id: string; personName: string; kind: "Staff" | "Teaching Fellow"; startDate: string; steps: { label: string; done: boolean; owner: string }[] }
+
 export interface DemoData {
+  assets: Asset[];
+  leave: LeaveEntry[];
+  meetings: Meeting[];
+  evidence: EvidenceItem[];
+  resources: Resource[];
+  trainerFeedback: TrainerFeedback[];
+  backlog: BacklogItem[];
+  announcements: Announcement[];
+  mentorSessions: MentorSession[];
+  audit: AuditEntry[];
+  templates: TemplateDoc[];
+  documents: DocumentRec[];
+  safeguardingCases: SafeguardingCase[];
+  vacancies: Vacancy[];
+  onboarding: OnboardingRec[];
   staff: Staff[];
   schools: School[];
   schoolTeachers: SchoolTeacher[];
