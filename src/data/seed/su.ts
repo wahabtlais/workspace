@@ -303,3 +303,13 @@ export const suFollowUps: FollowUp[] = [
   { id: "fu-05", title: "MoU renewal meeting with Olive Grove principal", program: "SU", schoolId: "sch-03", ownerId: "s-maya", due: addDays(DEMO_TODAY, 10), status: "Open", source: "MoU expires 31 Dec", createdAt: "2026-11-05" },
   { id: "fu-06", title: "Missing registers: Sunrise Grade 8-A", program: "SU", schoolId: "sch-05", ownerId: "s-omar", due: addDays(DEMO_TODAY, 2), status: "Open", source: "Missing register rule", createdAt: "2026-11-13" },
 ];
+
+/* Practicum observations for TF Cohort 2026–27 (Module 5 practicum at Cedar Hill and Lighthouse). */
+tfs.filter((t) => t.cohortId === "tfc-2").forEach((t, i) => {
+  const atCedar = i % 2 === 0;
+  visits.push({
+    id: `vis-prac-${t.id}`, schoolId: atCedar ? "sch-01" : "sch-06", date: i % 3 === 0 ? "2026-11-10" : "2026-11-12",
+    officerId: atCedar ? "s-omar" : "s-lina", tfId: t.id, purpose: "Classroom observation", status: "Report approved",
+    score: Math.round((2.6 + ((i * 7) % 9) / 10) * 10) / 10, notes: "Practicum observation (TF training Module 5).",
+  });
+});

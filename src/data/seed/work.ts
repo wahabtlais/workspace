@@ -29,8 +29,8 @@ const T = "2026-11-17T08:00:00";
 const Y = "2026-11-16T16:00:00";
 
 export const inbox: InboxItem[] = [
-  { id: "ib-1", toRole: "exec", kind: "approval", title: "Approve: 6 replacement field tablets (USD 2,100)", detail: "REQ-0007 · above the line-manager limit", link: "/operations/requests", createdAt: Y, status: "open", source: "Operations & HR", priority: "high" },
-  { id: "ib-2", toRole: "exec", kind: "approval", title: "Decide: Education Resilience Window go / no-go", detail: "Eligibility 4/5 met · deadline 15 Feb", link: "/executive/decisions", createdAt: Y, status: "open", source: "Fundraising" },
+  { id: "ib-1", ref: "dec-4", toRole: "exec", kind: "approval", title: "Approve: 6 replacement field tablets (USD 2,100)", detail: "REQ-0007 · above the line-manager limit", link: "/operations/requests", createdAt: Y, status: "open", source: "Operations & HR", priority: "high" },
+  { id: "ib-2", ref: "dec-2", toRole: "exec", kind: "approval", title: "Decide: Education Resilience Window go / no-go", detail: "Eligibility 4/5 met · deadline 15 Feb", link: "/executive/decisions", createdAt: Y, status: "open", source: "Fundraising" },
   { id: "ib-3", toRole: "exec", kind: "alert", title: "Off-track: average observation score 2.8 (target 3.0)", detail: "Two schools below 2.2 this term", link: "/results/indicators", createdAt: T, status: "open", source: "Results & Indicators" },
   { id: "ib-4", toRole: "su_pm", kind: "approval", title: "Attendance correction: Mira Haddad, training session", detail: "Absent → Excused · requested by Jad Mansour", link: "/school-upskilling/training", createdAt: "2026-11-14T10:20:00", status: "open", source: "Attendance", priority: "high" },
   { id: "ib-5", toRole: "su_pm", kind: "alert", title: "2 TFs below the 80% training attendance threshold", detail: "Certification criterion at risk · Cohort 2026–27", link: "/school-upskilling/teaching-fellows", createdAt: T, status: "open", source: "Attendance rule" },
@@ -69,7 +69,7 @@ export const notifications: Notification[] = [
   { id: "nt-1", toRole: "su_pm", text: "Stonebridge pupil attendance is down 18 pts over 6 weeks", link: "/school-upskilling/schools/sch-08", at: "2026-11-16T18:00:00", read: false, tone: "warning" },
   { id: "nt-2", toRole: "curriculum", text: "Tarek Daher approved Entrepreneurship Pathway v1.0", link: "/curriculum/cur-ent", at: "2026-11-10T12:00:00", read: false, tone: "success" },
   { id: "nt-3", toRole: "exec", text: "Monthly indicators refreshed for November", link: "/results/indicators", at: "2026-11-16T07:00:00", read: false, tone: "info" },
-  { id: "nt-4", toRole: "fb_po", text: "Absence streak detected for 2 students", link: "/future-builders/attendance", at: "2026-11-13T18:00:00", read: false, tone: "warning" },
+  { id: "nt-4", toRole: "fb_po", text: "Absence streak detected for a student", link: "/future-builders/attendance", at: "2026-11-13T18:00:00", read: false, tone: "warning" },
   { id: "nt-5", toRole: "fundraising", text: "Obligation due in 13 days: Atlas quarterly update", link: "/fundraising/obligations", at: "2026-11-17T07:00:00", read: false, tone: "warning" },
   { id: "nt-6", toPersona: "p-student", text: "Your Responsive landing page was graded: 88/100", link: "/student/assignments", at: "2026-11-08T12:00:00", read: false, tone: "success" },
   { id: "nt-7", toPersona: "p-tf", text: "New resource: Using rubrics with pupils", link: "/tf/training", at: "2026-11-15T12:00:00", read: true, tone: "info" },

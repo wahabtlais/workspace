@@ -203,7 +203,6 @@ export const portfolio: PortfolioItem[] = [
 ];
 
 export const fbFollowUps: FollowUp[] = [
-  { id: "fu-fb-1", title: "Absence follow-up: 3 consecutive sessions missed", program: "FB", studentId: "fbs-07", ownerId: "s-hala", due: addDays(DEMO_TODAY, 1), status: "Open", source: "Absence streak rule (3 sessions)", createdAt: "2026-11-12" },
   { id: "fu-fb-2", title: "Absence follow-up: 3 consecutive sessions missed", program: "FB", studentId: "fbs-14", ownerId: "s-hala", due: addDays(DEMO_TODAY, 2), status: "Open", source: "Absence streak rule (3 sessions)", createdAt: "2026-11-13" },
   { id: "fu-fb-3", title: "Guardian consent outstanding for 2 admitted students", program: "FB", ownerId: "s-hala", due: addDays(DEMO_TODAY, 3), status: "In progress", source: "Consent rule blocks account activation", createdAt: "2026-11-08" },
 ];

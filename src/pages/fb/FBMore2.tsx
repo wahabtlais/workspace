@@ -9,6 +9,7 @@ import { MiniTable } from "@/pages/staff/home/widgets";
 import { useData } from "@/store/hooks";
 import { attendanceRate } from "@/lib/metrics";
 import { PATHWAY_LABEL } from "@/data/seed/fb";
+import { useLiveIndicators } from "@/lib/indicators";
 
 export function Graduation() {
   const d = useData();
@@ -28,6 +29,7 @@ export function Graduation() {
 
 export function FBReports() {
   const d = useData();
+  const inds = useLiveIndicators();
   const regs = d.registers.filter((r) => r.kind === "fb");
   const cell = (ids: string[], t: string) => { const r = regs.filter((x) => d.fbSessions.find((s) => s.id === x.contextId)?.type === t && x.attendeeIds.some((a) => ids.includes(a))); return r.length ? `${attendanceRate(r)}%` : "—"; };
   return (
@@ -35,7 +37,7 @@ export function FBReports() {
       <Card><CardHeader title="Attendance by pathway and activity" /><CardBody>
         <MiniTable head={["Pathway", "Learning sessions", "Workshops", "Student meetings", "Mentor meetings"]} rows={(["ai", "web", "ent"] as const).map((p) => { const ids = d.students.filter((s) => s.pathway === p).map((s) => s.id); return [PATHWAY_LABEL[p], cell(ids, "Learning session"), cell(ids, "Workshop"), cell(ids, "Student meeting"), cell(ids, "Mentor meeting")]; })} />
       </CardBody></Card>
-      <Card><CardHeader title="Indicators" /><CardBody><MiniTable head={["Code", "Indicator", "Latest", "Target"]} rows={d.indicators.filter((i) => i.program === "FB").map((i) => [i.code, i.name, [...i.series].reverse().find((x) => x.value > 0)?.value ?? "—", i.target])} /></CardBody></Card>
+      <Card><CardHeader title="Indicators" /><CardBody><MiniTable head={["Code", "Indicator", "Latest", "Target"]} rows={inds.filter((i) => i.program === "FB").map((i) => [i.code, i.name, i.illustrative ? `${i.current} (illustrative)` : i.current, i.target])} /></CardBody></Card>
     </Workspace>
   );
 }

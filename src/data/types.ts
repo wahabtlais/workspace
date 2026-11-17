@@ -643,6 +643,9 @@ export interface Risk {
 
 export interface Decision {
   id: string;
+  requestId?: string;
+  obligationId?: string;
+  opportunityId?: string;
   title: string;
   context: string;
   requestedBy: string;
@@ -673,6 +676,8 @@ export type InboxKind = "approval" | "task" | "grading" | "form" | "register" | 
 
 export interface InboxItem {
   id: string;
+  /** Optional reference to the record this item is about (decision, request, etc.). */
+  ref?: string;
   /** Addressed to a role (everyone holding it) and/or a specific persona. */
   toRole?: RoleKey;
   toPersona?: string;

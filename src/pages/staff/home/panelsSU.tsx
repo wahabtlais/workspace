@@ -11,14 +11,16 @@ import { useDemo } from "@/store/demoStore";
 import { attendanceRate, attendeeRate, registerCompletion, TF_ATTENDANCE_THRESHOLD } from "@/lib/metrics";
 import { DEMO_TODAY, formatDate, pct } from "@/lib/utils";
 import { MiniTable } from "./widgets";
+import { useLiveIndicators } from "@/lib/indicators";
 
 export function ExecPanel() {
   const d = useData();
-  const ind = (id: string) => d.indicators.find((i) => i.id === id)!;
-  const latest = (id: string) => { const s = ind(id).series; return [...s].reverse().find((x) => x.value > 0)?.value ?? 0; };
-  const rows = d.indicators.map((i) => {
-    const v = [...i.series].reverse().find((x) => x.value > 0)?.value ?? 0;
-    return { name: i.code, label: i.name, pct: Math.min(130, Math.round((v / i.target) * 100)), v, target: i.target, unit: i.unit };
+  const inds = useLiveIndicators();
+  const latest = (id: string) => inds.find((i) => i.id === id)?.current ?? 0;
+  const inTraining = d.tfs.filter((t) => t.stage === "In training").length;
+  const rows = inds.map((i) => {
+    const v = i.current;
+    return { name: i.code, label: `${i.name}${i.illustrative ? " (illustrative)" : ""}`, pct: Math.min(130, Math.round((v / i.target) * 100)), v, target: i.target, unit: i.unit };
   });
   const pending = d.decisions.filter((x) => x.status === "Pending").length;
   return (
@@ -26,7 +28,7 @@ export function ExecPanel() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Pupils reached" value={latest("ind-su-reach")} target="900" progress={pct(latest("ind-su-reach"), 900)} icon={<Users />} to="/results" />
         <StatTile label="Learning gain 2025–26" value={`+${latest("ind-su-gain")}`} sub="points, pre → post" target="+20" progress={100} tone="success" icon={<Target />} to="/results/annual" />
-        <StatTile label="TFs certified" value={latest("ind-su-cert")} sub="14 in training now" target="26" progress={pct(12, 26)} icon={<GraduationCap />} to="/school-upskilling/teaching-fellows" />
+        <StatTile label="TFs certified" value={latest("ind-su-cert")} sub={`${inTraining} in training now`} target="26" progress={pct(latest("ind-su-cert"), 26)} icon={<GraduationCap />} to="/school-upskilling/teaching-fellows" />
         <StatTile label="Decisions waiting" value={pending} sub="with context, one-click decide" tone="warning" icon={<ClipboardList />} to="/executive/decisions" />
       </div>
       <Card>

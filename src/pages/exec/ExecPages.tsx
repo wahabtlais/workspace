@@ -14,8 +14,8 @@ import { useDemo } from "@/store/demoStore";
 import { toast } from "@/store/uiStore";
 import { useData, useLookup, usePersona } from "@/store/hooks";
 import { formatDate, relativeDay } from "@/lib/utils";
+import { useLiveIndicators } from "@/lib/indicators";
 
-const latest = (s: { value: number }[]) => [...s].reverse().find((x) => x.value > 0)?.value ?? 0;
 
 export function ExecOverview() {
   const d = useData();
@@ -32,13 +32,13 @@ export function ExecOverview() {
 }
 
 export function ProgramsImpact() {
-  const d = useData();
+  const inds = useLiveIndicators();
   return (
     <Workspace area="executive" title="Programs & impact" description="School Upskilling and Future Builders performance, with drill-down to the records behind each figure.">
       <div className="grid gap-5 lg:grid-cols-2">
         {(["SU", "FB"] as const).map((p) => (
           <Card key={p}><CardHeader title={p === "SU" ? "School Upskilling" : "Future Builders"} action={<Link to={p === "SU" ? "/school-upskilling" : "/future-builders"} className="text-[13px] text-brand-600 hover:underline">Open program</Link>} />
-            <CardBody className="space-y-3">{d.indicators.filter((i) => i.program === p).map((i) => { const v = latest(i.series); const pct = Math.min(100, (v / i.target) * 100); return (
+            <CardBody className="space-y-3">{inds.filter((i) => i.program === p).map((i) => { const v = i.current; const pct = Math.min(100, (v / i.target) * 100); return (
               <Link key={i.id} to={`/results/${i.id}`} className="block rounded-lg p-2 hover:bg-canvas"><div className="flex items-center justify-between text-[13px]"><span>{i.name}</span><span className="tabular font-medium">{v}{i.unit === "%" ? "%" : ""} / {i.target}{i.unit === "%" ? "%" : ""}</span></div><Progress value={pct} className="mt-1.5" tone={pct >= 95 ? "success" : pct >= 80 ? "brand" : "warning"} /></Link>
             ); })}</CardBody></Card>
         ))}

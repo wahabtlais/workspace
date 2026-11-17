@@ -5,18 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatTile } from "@/components/common/StatTile";
 import { AIAction } from "@/components/shell/AskPanel";
-import { useData, useLookup } from "@/store/hooks";
+import { useLookup } from "@/store/hooks";
 import { personas } from "@/config/personas";
 import { MiniTable } from "./widgets";
+import { useLiveIndicators } from "@/lib/indicators";
 
-function latest(series: { value: number }[]) {
-  return [...series].reverse().find((x) => x.value > 0)?.value ?? 0;
-}
 
 export function MePanel() {
-  const d = useData();
   const L = useLookup();
-  const rows = d.indicators.map((i) => ({ i, v: latest(i.series), on: latest(i.series) >= i.target * 0.95 }));
+  const rows = useLiveIndicators().map((i) => ({ i, v: i.current, on: i.current >= i.target * 0.95 }));
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

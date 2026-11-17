@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/misc";
 import { StatTile } from "@/components/common/StatTile";
 import { useData, usePersona } from "@/store/hooks";
 import { formatDate } from "@/lib/utils";
+import { useLiveIndicators } from "@/lib/indicators";
 
 function Boundary({ text }: { text: string }) {
   return <p className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-surface px-2 py-1 text-[12px] text-muted ring-1 ring-line"><Lock className="size-3.5" /> {text}</p>;
@@ -67,14 +68,14 @@ function DonorHome() {
   const d = useData();
   const p = usePersona();
   const grant = d.grants.find((g) => g.id === p.scope.grantIds?.[0])!;
-  const inds = d.indicators.filter((i) => grant.indicatorIds.includes(i.id));
+  const inds = useLiveIndicators().filter((i) => grant.indicatorIds.includes(i.id));
   return (
     <div className="space-y-5">
       <div><h1 className="text-[24px] font-semibold">{grant.title}</h1><p className="mt-1 text-muted">{grant.currency} {grant.amount.toLocaleString("en-US")} · {formatDate(grant.start, { month: "short", year: "numeric" })} – {formatDate(grant.end, { month: "short", year: "numeric" })}</p>
         <Boundary text="You see approved reports and aggregated indicators for your grant only. No identifiable student or pupil data." /></div>
       <div className="grid gap-4 sm:grid-cols-2">
         {inds.map((i) => {
-          const v = [...i.series].reverse().find((x) => x.value > 0)?.value ?? 0;
+          const v = i.current;
           const u = i.unit === "%" ? "%" : "";
           return <StatTile key={i.id} label={i.name} value={`${v}${u}`} target={`${i.target}${u}`} progress={Math.min(100, (v / i.target) * 100)} icon={<Target />} />;
         })}

@@ -56,10 +56,10 @@ export const risks: Risk[] = [
 ];
 
 export const decisions: Decision[] = [
-  { id: "dec-1", title: "Approve semi-annual report to Northbridge Foundation", context: "Draft prepared by Fundraising with indicator figures verified by M&E.", requestedBy: "s-joelle", due: "2026-12-10", status: "Pending", link: "/fundraising/grants/gr-1" },
-  { id: "dec-2", title: "Go / no-go: Education Resilience Window (USD 350k)", context: "Eligibility 4 of 5 criteria met; co-funding to confirm.", requestedBy: "s-joelle", due: "2026-11-25", status: "Pending", link: "/fundraising/opportunities/opp-2" },
+  { id: "dec-1", obligationId: "obl-1", title: "Approve semi-annual report to Northbridge Foundation", context: "Draft prepared by Fundraising with indicator figures verified by M&E.", requestedBy: "s-joelle", due: "2026-12-10", status: "Pending", link: "/fundraising/grants/gr-1" },
+  { id: "dec-2", opportunityId: "opp-2", title: "Go / no-go: Education Resilience Window (USD 350k)", context: "Eligibility 4 of 5 criteria met; co-funding to confirm.", requestedBy: "s-joelle", due: "2026-11-25", status: "Pending", link: "/fundraising/opportunities/opp-2" },
   { id: "dec-3", title: "Extend TF cohort 2026–27 training by one week", context: "Requested by SU PM to accommodate catch-up sessions.", requestedBy: "s-maya", due: "2026-11-24", status: "Pending" },
-  { id: "dec-4", title: "Budget for 6 replacement field tablets", context: "Ops request REQ-0007 above the line-manager approval limit.", requestedBy: "s-ziad", due: "2026-11-20", status: "Pending", link: "/operations/requests" },
+  { id: "dec-4", requestId: "REQ-0007", title: "Budget for 6 replacement field tablets", context: "Ops request REQ-0007 above the line-manager approval limit.", requestedBy: "s-ziad", due: "2026-11-20", status: "Pending", link: "/operations/requests" },
   { id: "dec-5", title: "Adopt annual pupil pre/post assessment as standard", context: "Agreed with all partner schools for 2026–27.", requestedBy: "s-maya", due: "2026-09-10", status: "Approved" },
 ];
 
