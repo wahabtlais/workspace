@@ -1,5 +1,6 @@
 import type { RouteObject } from "react-router";
 import { suRoutes } from "./su";
+import { assessmentRoutes } from "./assessments";
 
-/** All staff workspace routes. Unlisted paths fall back to the Phase A scaffold page. */
-export const staffRoutes: RouteObject[] = [...suRoutes];
+/** All staff workspace routes. Unlisted paths fall back to the scaffold page. */
+export const staffRoutes: RouteObject[] = [...suRoutes, ...assessmentRoutes];
