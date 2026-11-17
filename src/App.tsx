@@ -1,0 +1,52 @@
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router";
+import { TooltipProvider } from "@/components/ui/overlay";
+import { PrototypeBar } from "@/components/shell/PrototypeBar";
+import { PersonaSwitcher } from "@/components/shell/PersonaSwitcher";
+import { Toaster } from "@/components/shell/Toaster";
+import { StaffLayout } from "@/layouts/StaffLayout";
+import { PortalLayout } from "@/layouts/PortalLayout";
+import { PARTNER_NAV, STUDENT_NAV, TEACHER_NAV, TF_NAV } from "@/config/navigation";
+import { usePersona } from "@/store/hooks";
+import Home from "@/pages/staff/Home";
+import Inbox from "@/pages/staff/Inbox";
+import SectionPage from "@/pages/SectionPage";
+import StudentHome from "@/pages/portals/StudentHome";
+import TFHome from "@/pages/portals/TFHome";
+import TeacherToday from "@/pages/portals/TeacherToday";
+import PartnerHome from "@/pages/portals/PartnerHome";
+import PortalSection from "@/pages/portals/PortalSection";
+
+function Root() {
+  return (
+    <TooltipProvider>
+      <PrototypeBar />
+      <Outlet />
+      <PersonaSwitcher />
+      <Toaster />
+    </TooltipProvider>
+  );
+}
+
+function PartnerLayout() {
+  const p = usePersona();
+  const key = p.role === "client" || p.role === "host" || p.role === "donor" ? p.role : "client";
+  const title = { client: "Partner Access · Client", host: "Partner Access · Internship host", donor: "Partner Access · Donor" }[key];
+  return <PortalLayout surface="partner" title={title} nav={PARTNER_NAV[key]} />;
+}
+
+const router = createBrowserRouter([
+  {
+    element: <Root />,
+    children: [
+      { path: "/", element: <StaffLayout />, children: [{ index: true, element: <Home /> }, { path: "inbox", element: <Inbox /> }, { path: "*", element: <SectionPage /> }] },
+      { path: "/student", element: <PortalLayout surface="student" title="Future Builders · Student Portal" nav={STUDENT_NAV} />, children: [{ index: true, element: <StudentHome /> }, { path: "*", element: <PortalSection /> }] },
+      { path: "/tf", element: <PortalLayout surface="tf" title="TF Learning Portal" nav={TF_NAV} />, children: [{ index: true, element: <TFHome /> }, { path: "*", element: <PortalSection /> }] },
+      { path: "/teacher", element: <PortalLayout surface="teacher" title="Class Teacher" nav={TEACHER_NAV} bilingual />, children: [{ index: true, element: <TeacherToday /> }, { path: "*", element: <PortalSection /> }] },
+      { path: "/partner", element: <PartnerLayout />, children: [{ index: true, element: <PartnerHome /> }, { path: "*", element: <PortalSection /> }] },
+    ],
+  },
+]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}
