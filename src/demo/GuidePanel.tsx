@@ -31,7 +31,7 @@ export function GuidePanel() {
   const allDone = last && done;
 
   return (
-    <div className="fixed bottom-4 left-4 z-[65] w-[min(360px,calc(100vw-32px))] overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 text-white shadow-pop" role="region" aria-label="Demo guide">
+    <div className="fixed bottom-20 left-4 z-[65] sm:bottom-4 w-[min(360px,calc(100vw-32px))] overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 text-white shadow-pop" role="region" aria-label="Demo guide">
       <div className="flex items-center gap-2 px-4 py-2.5">
         <span className="rounded bg-accent-400 px-1.5 text-[10px] font-bold uppercase text-ink-950">Demo</span>
         <p className="min-w-0 flex-1 truncate text-[13px] font-semibold">{sc.title}</p>
