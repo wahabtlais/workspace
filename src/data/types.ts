@@ -776,7 +776,11 @@ export interface LessonInsight {
   decidedBy?: string;
 }
 
+/** Optional AI-generated interactive activity attached to a lesson (proposed capability, simulated). */
+export interface InteractiveActivity { curriculumId: string; lessonTitle: string; format: string; status: "draft" | "published"; updatedAt: string }
+
 export interface DemoData {
+  interactives: InteractiveActivity[];
   events: CalendarEvent[];
   lessonInsights: LessonInsight[];
   assets: Asset[];

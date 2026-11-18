@@ -9,6 +9,7 @@ import { useDemo } from "@/store/demoStore";
 import { toast } from "@/store/uiStore";
 import { useData, usePersona } from "@/store/hooks";
 import { DEMO_TODAY, formatDate, relativeDay, uid } from "@/lib/utils";
+import { WebJourneyActivity } from "@/components/interactive/Interactive";
 
 export function useMe() {
   const d = useData();
@@ -33,6 +34,12 @@ export function MyLearning() {
     <div className="space-y-5">
       {mine.length > 1 && <div className="flex flex-wrap gap-2">{mine.map((c) => <button key={c.id} onClick={() => setSel(c.id)} className={`rounded-full border px-3 py-1 text-[13px] ${c.id === course.id ? "border-fb bg-fb-50 font-medium text-fb" : "border-line text-muted"}`}>{c.title}</button>)}</div>}
       <div><h1 className="text-[24px] font-semibold">{course.title}</h1><p className="text-[13px] text-muted">Version {v.label} · {done.length} of {total} lessons complete</p><Progress value={(done.length / total) * 100} className="mt-2 max-w-md" /></div>
+      {d.interactives.filter((x) => x.status === "published" && x.curriculumId === course.curriculumId).map((x) => (
+        <Card key={x.lessonTitle} className="p-4">
+          <div className="flex flex-wrap items-center gap-2"><Badge tone="fb">New interactive activity</Badge><span className="font-semibold">{x.lessonTitle}</span><Badge tone="outline" className="ml-auto">AI-generated, reviewed by your curriculum team</Badge></div>
+          <div className="mt-3"><WebJourneyActivity /></div>
+        </Card>
+      ))}
       {v.modules.map((m, i) => (
         <Card key={m.id}><CardHeader icon={<BookOpen />} title={`Module ${i + 1}: ${m.title}`} />
           <ul className="divide-y divide-line border-t border-line">{m.lessons.map((l) => { const isDone = done.includes(l.id); return (

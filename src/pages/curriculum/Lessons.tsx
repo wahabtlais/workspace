@@ -17,6 +17,7 @@ import { useData, useLookup, usePersona } from "@/store/hooks";
 import { toast } from "@/store/uiStore";
 import { analyzeInsight, approveInsight, dismissInsight, findLesson, planFor, publishInsight, saveRecommendation } from "@/store/curriculumLoop";
 import { cn, formatDate } from "@/lib/utils";
+import { InteractiveDesigner } from "@/components/interactive/Interactive";
 
 const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const lessonPath = (curId: string, title: string) => `/curriculum/lessons/${curId}/les-${slug(title)}`;
@@ -211,6 +212,7 @@ export function LessonPage() {
         <TabsList>
           <TabsTrigger value="plan">Lesson plan</TabsTrigger>
           <TabsTrigger value="slides">Slides</TabsTrigger>
+          <TabsTrigger value="interactive">Interactive experience</TabsTrigger>
           <TabsTrigger value="resources">Resources & assessments</TabsTrigger>
           <TabsTrigger value="feedback">Feedback & evidence ({evidence.length})</TabsTrigger>
           <TabsTrigger value="versions">Versions</TabsTrigger>
@@ -233,6 +235,7 @@ export function LessonPage() {
           </div>
           <p className="mt-2 text-[12px] text-muted">Slide preview (simulated). In production the deck opens in Google Slides.</p>
         </TabsContent>
+        <TabsContent value="interactive" className="mt-4"><InteractiveDesigner curriculumId={cur.id} lessonTitle={lesson.title} /></TabsContent>
         <TabsContent value="resources" className="mt-4 space-y-4">
           <Card><CardHeader title="Supporting resources" /><CardBody><MiniTable empty="No resources tagged to these objectives" head={["Resource", "Type", "Updated"]} rows={resources.map((r) => [r.title, r.kind, formatDate(r.updatedAt)])} /></CardBody></Card>
           <Card><CardHeader icon={<ClipboardCheck />} title="Linked assessments" /><CardBody><MiniTable empty="No assessments linked yet" head={["Assessment", "Type", "Audience", "Status"]} rows={forms.map((f) => [f.title, f.type, f.audience, f.status])} /></CardBody></Card>

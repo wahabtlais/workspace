@@ -31,7 +31,7 @@ export function buildSeed(): DemoData {
     pupilResults: buildPupilResults(classes),
     indicators, grants, obligations, opportunities, requests, risks, decisions, priorities, kb,
     inbox, notifications, activity,
-    events: [], lessonInsights: [],
+    events: [], lessonInsights: [], interactives: [],
   };
   const out = structuredClone(data);
   refine(out);
