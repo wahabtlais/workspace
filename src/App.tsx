@@ -16,6 +16,13 @@ import TeacherToday from "@/pages/portals/TeacherToday";
 import PartnerHome from "@/pages/portals/PartnerHome";
 import PortalSection from "@/pages/portals/PortalSection";
 import { staffRoutes } from "@/routes";
+import { FieldLayout } from "@/pages/field/FieldLayout";
+import { FieldToday } from "@/pages/field/FieldToday";
+import { FieldVisit } from "@/pages/field/FieldVisit";
+import { FieldAttendance, FieldSchools } from "@/pages/field/FieldMore";
+import { FieldForms, FieldSync } from "@/pages/field/FieldMore2";
+import DemoCenter from "@/demo/DemoCenter";
+import { GuidePanel } from "@/demo/GuidePanel";
 import { partnerRoutes, studentRoutes, teacherRoutes, tfRoutes } from "@/routes/portals";
 
 function Root() {
@@ -24,6 +31,7 @@ function Root() {
       <PrototypeBar />
       <Outlet />
       <PersonaSwitcher />
+      <GuidePanel />
       <Toaster />
     </TooltipProvider>
   );
@@ -44,6 +52,8 @@ const router = createBrowserRouter([
       { path: "/student", element: <PortalLayout surface="student" title="Future Builders · Student Portal" nav={STUDENT_NAV} />, children: [{ index: true, element: <StudentHome /> }, ...studentRoutes, { path: "*", element: <PortalSection /> }] },
       { path: "/tf", element: <PortalLayout surface="tf" title="TF Learning Portal" nav={TF_NAV} />, children: [{ index: true, element: <TFHome /> }, ...tfRoutes, { path: "*", element: <PortalSection /> }] },
       { path: "/teacher", element: <PortalLayout surface="teacher" title="Class Teacher" nav={TEACHER_NAV} bilingual />, children: [{ index: true, element: <TeacherToday /> }, ...teacherRoutes, { path: "*", element: <PortalSection /> }] },
+      { path: "/field", element: <FieldLayout />, children: [{ index: true, element: <FieldToday /> }, { path: "visit/:id", element: <FieldVisit /> }, { path: "schools", element: <FieldSchools /> }, { path: "attendance", element: <FieldAttendance /> }, { path: "forms", element: <FieldForms /> }, { path: "sync", element: <FieldSync /> }] },
+      { path: "/demo", element: <DemoCenter /> },
       { path: "/partner", element: <PartnerLayout />, children: [{ index: true, element: <PartnerHome /> }, ...partnerRoutes, { path: "*", element: <PortalSection /> }] },
     ],
   },

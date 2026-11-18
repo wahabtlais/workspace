@@ -1,6 +1,6 @@
 import {
   BookOpen, Bot, Briefcase, CalendarDays, ClipboardCheck, GraduationCap, HandCoins,
-  Home, Inbox, Landmark, Library, Rocket, School, Settings, ShieldAlert, Target, Send, type LucideIcon,
+  Home, Inbox, Smartphone, Landmark, Library, Rocket, School, Settings, ShieldAlert, Target, Send, type LucideIcon,
 } from "lucide-react";
 import type { Area } from "./access";
 
@@ -18,6 +18,7 @@ export const STAFF_NAV: NavGroup[] = [
       { label: "Inbox", path: "/inbox", icon: Inbox, area: "inbox", badge: "inbox" },
       { label: "My calendar", path: "/calendar", icon: CalendarDays, area: "calendar" },
       { label: "My requests", path: "/requests", icon: Send, area: "requests" },
+      { label: "Field mode (mobile)", path: "/field", icon: Smartphone, area: "field" },
       { label: "Ask CodeBrave", path: "/ask", icon: Bot, area: "ask", children: [c("Chat", "/ask"), c("Task library", "/ask/tasks"), c("My runs", "/ask/runs")] },
     ],
   },

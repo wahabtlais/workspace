@@ -1,4 +1,5 @@
-import { ChevronDown, FlaskConical, RotateCcw, Wifi, WifiOff } from "lucide-react";
+import { ChevronDown, FlaskConical, Play, RotateCcw, Wifi, WifiOff } from "lucide-react";
+import { Link } from "react-router";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/overlay";
 import { Button } from "@/components/ui/button";
 import { SURFACE_LABEL } from "@/config/personas";
@@ -24,6 +25,7 @@ export function PrototypeBar() {
       <span className="hidden items-center gap-1.5 font-semibold tracking-wide text-accent-400 sm:inline-flex"><FlaskConical className="size-3.5" />PROTOTYPE</span>
       <span className="hidden text-white/50 md:inline">Fictional data · simulated backend & AI</span>
       <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <Link to="/demo" className="inline-flex h-7 items-center gap-1.5 rounded-md bg-accent-400 px-2.5 font-semibold text-ink-950 hover:bg-accent-500"><Play className="size-3.5" /><span className="hidden sm:inline">Demo Center</span></Link>
         <button onClick={() => setPicker(true)} className="inline-flex h-7 max-w-[380px] items-center gap-1.5 whitespace-nowrap rounded-md bg-white/10 px-2.5 hover:bg-white/15" aria-label="Switch persona">
           <span className="hidden text-white/60 sm:inline">Viewing as</span>
           <span className="truncate font-medium text-white">{persona.name}</span>

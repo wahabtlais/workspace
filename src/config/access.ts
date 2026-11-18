@@ -22,7 +22,7 @@ const MATRIX: Partial<Record<RoleKey, Partial<Record<Area, AccessLevel>>>> = {
   exec: { executive: "full", su: "view", fb: "view", curriculum: "view", learning: "aggregate", assessments: "view", results: "full", fundraising: "full", operations: "view", knowledge: "full", admin: "view" },
   su_pm: { su: "full", curriculum: "view", learning: "full", assessments: "full", executive: "scoped", results: "view", fundraising: "scoped", operations: "scoped" },
   su_po: { su: "scoped", curriculum: "view", learning: "view", assessments: "scoped", field: "full", results: "view" },
-  su_trainer: { su: "scoped", curriculum: "scoped", learning: "scoped", assessments: "scoped" },
+  su_trainer: { field: "full", su: "scoped", curriculum: "scoped", learning: "scoped", assessments: "scoped" },
   fb_pm: { fb: "full", curriculum: "view", learning: "full", assessments: "full", executive: "scoped", results: "view", fundraising: "scoped", operations: "scoped" },
   fb_po: { fb: "scoped", curriculum: "view", learning: "view", assessments: "scoped", results: "view" },
   fb_trainer: { fb: "scoped", curriculum: "scoped", learning: "scoped", assessments: "scoped" },

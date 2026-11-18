@@ -19,7 +19,7 @@ export function Risks() {
   const update = useDemo((s) => s.update);
   const [title, setTitle] = useState("");
   const cell = (l: number, i: number) => d.risks.filter((r) => r.likelihood === l && r.impact === i && r.status !== "Closed");
-  const add = () => { update((x) => { x.risks.unshift({ id: uid("rsk"), title, area: "Organization", likelihood: 3, impact: 3, ownerId: "s-rana", mitigation: "To be defined", status: "Open" }); }); toast({ tone: "success", title: "Risk added", body: "It will appear on the next management meeting agenda." }); setTitle(""); };
+  const add = () => { update((x) => { x.risks.unshift({ id: uid("rsk"), title, area: "Organization", likelihood: 4, impact: 3, ownerId: "s-rana", mitigation: "To be defined", status: "Open" }); }); toast({ tone: "success", title: "Risk added", body: "It will appear on the next management meeting agenda." }); setTitle(""); };
   return (
     <Workspace area="executive" title="Risks & issues" description="Risk register with likelihood, impact, owner and mitigation.">
       <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
