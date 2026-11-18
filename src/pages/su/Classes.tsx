@@ -11,6 +11,7 @@ import { pupilAttendanceAccess } from "@/config/access";
 import { useData, useLookup, usePersona } from "@/store/hooks";
 import { attendanceRate, registerCompletion } from "@/lib/metrics";
 import { DEMO_TODAY } from "@/lib/utils";
+import { ClassLearningProfile } from "./ClassLearningProfile";
 import { weekday } from "@/data/seed/su";
 
 const DAYS = ["", "Mon", "Tue", "Wed", "Thu", "Fri"];
@@ -60,6 +61,7 @@ export function ClassDetail() {
     <Workspace area="su" hideSubnav title={`Grade ${c.grade}-${c.section}`} description={`${school.name} · ${c.subject}`}
       crumbs={[{ label: "School Upskilling", to: "/school-upskilling" }, { label: "Classes & rosters", to: "/school-upskilling/classes" }, { label: `${school.name.split(" ")[0]} ${c.grade}-${c.section}` }]}>
       <Card><CardBody className="pt-5"><KeyValue cols={4} items={[["Class teacher", L.person(c.teacherId)], ["Teacher type", c.teacherType === "tf" ? "Teaching Fellow" : "School-employed teacher"], ["Timetable", `${c.days.map((x) => DAYS[x]).join(" & ")} · ${c.period}`], ["Pupils", c.pupilIds.length]]} /></CardBody></Card>
+      <ClassLearningProfile cls={c} />
       {acc.level === "none" ? (
         <Card className="p-8 text-center"><Lock className="mx-auto size-6 text-muted" /><p className="mt-3 font-semibold">Pupil registers are restricted</p><p className="mx-auto mt-1 max-w-md text-[13px] text-muted">{acc.reason}</p></Card>
       ) : (

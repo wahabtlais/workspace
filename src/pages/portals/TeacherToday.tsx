@@ -10,6 +10,7 @@ import { useData, usePersona } from "@/store/hooks";
 import { attendanceRate, sessionProgress } from "@/lib/metrics";
 import { weekday } from "@/data/seed/su";
 import { DEMO_TODAY, formatDate } from "@/lib/utils";
+import { ClassCurriculum } from "@/components/classes/ClassCurriculum";
 
 /** Today view for anyone who teaches classes: school-employed class teachers and deployed TFs. Bilingual EN / AR. */
 export function TodayClasses({ basePath, showLang }: { basePath: string; showLang?: boolean }) {
@@ -90,6 +91,8 @@ export function TodayClasses({ basePath, showLang }: { basePath: string; showLan
           </CardBody>
         </Card>
       )}
+
+      {myClasses.length > 0 && <ClassCurriculum grades={[...new Set(myClasses.map((c) => c.grade))]} lang={lang} />}
 
       <Card>
         <CardHeader icon={<Users />} title={t("attendanceThisTerm")} />

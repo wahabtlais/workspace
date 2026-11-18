@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Award, GraduationCap, Megaphone } from "lucide-react";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Workspace } from "@/components/common/Workspace";
 import { DataTable } from "@/components/data/DataTable";
 import { MiniTable } from "@/pages/staff/home/widgets";
 import { useData, useLookup } from "@/store/hooks";
+import { useDemo } from "@/store/demoStore";
 import { formatDate, relativeDay } from "@/lib/utils";
 
 function lessonCount(d: ReturnType<typeof useData>, courseId: string) {
@@ -14,10 +15,39 @@ function lessonCount(d: ReturnType<typeof useData>, courseId: string) {
   return d.curricula.find((c) => c.id === k.curriculumId)!.versions.find((v) => v.id === k.versionId)!.modules.reduce((a, m) => a + m.lessons.length, 0);
 }
 
+function HubExplainer() {
+  const nav = useNavigate();
+  const setPersona = useDemo((x) => x.setPersona);
+  const go = (pid: string, to: string) => { setPersona(pid); nav(to); };
+  const AUD = [
+    { who: "Future Builders students", body: "Courses by pathway, lessons, assignments and submissions, trainer feedback and progress.", as: "Jana (student)", pid: "p-student", to: "/student/learning" },
+    { who: "Teaching Fellows", body: "Training course, resources, assessments, attendance, progress and certificate.", as: "Rami (Teaching Fellow)", pid: "p-tf", to: "/tf/training" },
+    { who: "Class teachers", body: "Their own classes, registers and the classroom lessons assigned to their grades.", as: "Salma (class teacher)", pid: "p-teacher", to: "/teacher" },
+  ];
+  return (
+    <div className="space-y-3">
+      <Card className="p-4">
+        <ol className="grid gap-3 md:grid-cols-3">
+          {[["1", "Curriculum Management", "Designs, reviews, approves and publishes versions of each curriculum.", "/curriculum"], ["2", "Learning Hub", "Turns each published version into a course in the right environment, and tracks progress and grading.", "/learning"], ["3", "Learners and teachers", "Take lessons, submit work, get feedback and certificates. Their feedback flows back to Curriculum.", "/curriculum/feedback"]].map(([n, t, b, to]) => (
+            <li key={n} className="flex gap-3"><span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-50 text-[13px] font-semibold text-brand-700">{n}</span><span><Link to={to} className="font-semibold hover:underline">{t}</Link><span className="block text-[13px] text-muted">{b}</span></span></li>
+          ))}
+        </ol>
+      </Card>
+      <div className="grid gap-3 md:grid-cols-3">
+        {AUD.map((a) => (
+          <Card key={a.who} className="flex flex-col p-4"><p className="font-semibold">{a.who}</p><p className="mt-1 flex-1 text-[13px] text-muted">{a.body}</p><button onClick={() => go(a.pid, a.to)} className="mt-3 self-start text-[13px] font-medium text-brand-700 hover:underline">See it as {a.as} →</button></Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Courses() {
   const d = useData();
   return (
-    <Workspace area="learning" title="Courses" description="One Learning Hub engine, two environments: the Future Builders Student Portal and the TF Learning Portal. Courses are published snapshots of curriculum versions.">
+    <Workspace area="learning" title="Learning Hub" description="Where learning happens. Curriculum Management decides what should be taught; the Learning Hub is where learners and trainers access and deliver it.">
+      <HubExplainer />
+      <h2 className="text-[16px] font-semibold">Courses running now</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {d.courses.map((k) => {
           const cur = d.curricula.find((c) => c.id === k.curriculumId)!;

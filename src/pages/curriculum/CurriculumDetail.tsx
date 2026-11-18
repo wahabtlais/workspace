@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/misc";
 import { Dialog, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/overlay";
 import { Workspace } from "@/components/common/Workspace";
 import { useData, usePersona } from "@/store/hooks";
+import { useUI } from "@/store/uiStore";
 import { createDraft, sendForReview, updateChangeLog } from "@/store/actions";
 import { formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export default function CurriculumDetail() {
   const { id } = useParams();
   const d = useData();
   const persona = usePersona();
+  const setAsk = useUI((s) => s.setAsk);
   const cur = d.curricula.find((c) => c.id === id);
   const [verId, setVer] = useState<string | undefined>(undefined);
   const [dialog, setDialog] = useState<"ai" | "publish" | "decide" | null>(null);
@@ -56,6 +58,7 @@ export default function CurriculumDetail() {
           <span className="ms-auto flex flex-wrap gap-2">
             {ver.status === "draft" && isOwner && <>
               <Button variant="ai" size="sm" onClick={() => setDialog("ai")}><Sparkles /> Draft lesson with AI</Button>
+              <Button variant="ai" size="sm" onClick={() => setAsk(true, `Lesson: ${ver.modules.flatMap((m) => m.lessons).slice(-1)[0]?.title ?? cur.title}`, "Review this lesson")}><Sparkles /> AI review before sending</Button>
               <Button size="sm" onClick={() => sendForReview(cur.id, ver.id)}><Send /> Send for review</Button>
             </>}
             {ver.status === "in_review" && (isReviewer || approver) && <Button size="sm" onClick={() => setDialog("decide")}>{approver ? "Approve or request changes" : "Review"}</Button>}
