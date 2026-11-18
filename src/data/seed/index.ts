@@ -7,6 +7,7 @@ import { buildAssessmentSessions, buildPupilResults, forms } from "./assessments
 import { decisions, grants, indicators, kb, obligations, opportunities, priorities, risks } from "./org";
 import { activity, inbox, notifications, requests } from "./work";
 import * as extra from "./extra";
+import { refine } from "./refine";
 
 /** Builds a fresh, deep-copied baseline dataset. Used on first load and by Reset Demo. */
 export function buildSeed(): DemoData {
@@ -30,6 +31,9 @@ export function buildSeed(): DemoData {
     pupilResults: buildPupilResults(classes),
     indicators, grants, obligations, opportunities, requests, risks, decisions, priorities, kb,
     inbox, notifications, activity,
+    events: [], lessonInsights: [],
   };
-  return structuredClone(data);
+  const out = structuredClone(data);
+  refine(out);
+  return out;
 }

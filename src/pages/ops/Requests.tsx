@@ -36,10 +36,13 @@ export function RequestCard({ r, canAct }: { r: OpsRequest; canAct: boolean }) {
     <Card className="p-4">
       <div className="flex flex-wrap items-start gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2"><p className="font-medium">{r.title}</p><Badge tone="outline">{r.type}</Badge><StatusBadge status={r.status} /></div>
+          <div className="flex flex-wrap items-center gap-2"><p className="font-medium">{r.title}</p><Badge tone="outline">{r.type}</Badge><StatusBadge status={r.status} />{r.aiFilled && <Badge tone="ai">Filled with AI</Badge>}</div>
           <p className="mt-0.5 text-[12px] text-muted">{r.id} · {L.person(r.requesterId)} · {formatDate(r.createdAt)}{r.amount ? ` · USD ${r.amount.toLocaleString("en-US")}` : ""}{r.assigneeId ? ` · assigned to ${L.person(r.assigneeId)}` : ""}</p>
+          <p className="mt-0.5 text-[12px] text-muted">To: <span className="font-medium text-fg">{r.destination ?? "Operations & HR"}</span>{r.ownerId ? <> · Responsible: <span className="font-medium text-fg">{L.person(r.ownerId)}</span></> : null}</p>
           {r.details && <p className="mt-1 text-[13px] text-muted">{r.details}</p>}
+          {r.fields && r.fields.length > 0 && <dl className="mt-2 grid gap-x-4 gap-y-1 text-[12.5px] sm:grid-cols-2">{r.fields.map((x) => <div key={x.label} className="flex gap-1.5"><dt className="text-muted">{x.label}:</dt><dd>{x.value}</dd></div>)}</dl>}
           <div className="mt-2"><ApprovalChain r={r} /></div>
+          {r.history && r.history.length > 0 && <details className="mt-2 text-[12px]"><summary className="cursor-pointer text-muted hover:text-fg">Status history ({r.history.length})</summary><ol className="mt-1.5 space-y-1 border-l border-line pl-3">{r.history.map((h, i) => <li key={i}><span className="text-muted tabular">{formatDate(h.at)}</span> · {h.text}{h.by ? <span className="text-muted"> · {L.person(h.by)}</span> : null}</li>)}</ol></details>}
         </div>
         <div className="flex flex-wrap gap-2">
           {myTurn && <><Button size="sm" variant="secondary" onClick={() => decideRequest(r.id, false)}><X /> Reject</Button><Button size="sm" variant="success" onClick={() => decideRequest(r.id, true)}><Check /> Approve</Button></>}
@@ -56,7 +59,7 @@ const GROUPS: OpsRequest["status"][] = ["In approval", "Approved", "Assigned", "
 export default function Requests() {
   const d = useData();
   return (
-    <Workspace area="operations" title="Requests" description="Leave, equipment, travel, purchase and general requests. Each type follows its approval chain; approvers act from here or their Inbox."
+    <Workspace area="operations" title="Requests" description="All requests across the organization: equipment, travel, leave, purchases, curriculum and program support. Each follows its approval route; approvers act here or from their Inbox."
       aiActions={<AIAction label="Summarise bottlenecks" prompt="Summarise open requests by stage" />}>
       <div className="flex flex-wrap gap-2">{GROUPS.map((g) => <Badge key={g} tone="outline">{g}: {d.requests.filter((r) => r.status === g).length}</Badge>)}</div>
       {GROUPS.map((g) => { const list = d.requests.filter((r) => r.status === g); return list.length ? (

@@ -619,9 +619,17 @@ export interface ApprovalStep {
 
 export interface OpsRequest {
   id: string;
-  type: "Leave" | "Equipment" | "Travel" | "Purchase" | "General";
+  type: "Leave" | "Equipment" | "Travel" | "Purchase" | "General" | "Curriculum" | "Program support";
   title: string;
   requesterId: string;
+  /** Who the request is addressed to (chosen first in the request form). */
+  destination?: RequestDestination;
+  /** Type-specific answers from the adaptive form. */
+  fields?: { label: string; value: string }[];
+  /** Person responsible for fulfilling the request. */
+  ownerId?: string;
+  history?: { at: string; text: string; by?: string }[];
+  aiFilled?: boolean;
   createdAt: string;
   amount?: number;
   details: string;
@@ -719,7 +727,7 @@ export interface LeaveEntry { id: string; staffId: string; type: "Annual" | "Sic
 export interface Meeting { id: string; title: string; date: string; attendees: string[]; agenda: { item: string; source: string }[]; decisions: string[]; followUps: { text: string; ownerId: string; done: boolean }[]; status: "Upcoming" | "Held" }
 export interface EvidenceItem { id: string; title: string; kind: "Story" | "Photo" | "Quote" | "Document"; program: Program; indicatorIds: string[]; consent: "Consented" | "Pending" | "Not required"; addedBy: string; date: string; excerpt: string }
 export interface Resource { id: string; title: string; kind: "Video" | "Slides" | "Document" | "Dataset" | "Starter code"; collection: Program; objectiveIds: string[]; updatedAt: string }
-export interface TrainerFeedback { id: string; curriculumId: string; lessonTitle: string; trainerId: string; rating: number; theme: "Timing" | "Difficulty" | "Materials" | "Engagement"; comment: string; date: string }
+export interface TrainerFeedback { id: string; curriculumId: string; lessonTitle: string; trainerId: string; source?: "Trainer" | "Teacher" | "Teaching Fellow"; rating: number; theme: "Timing" | "Difficulty" | "Materials" | "Engagement"; comment: string; date: string }
 export interface BacklogItem { id: string; curriculumId: string; title: string; source: string; priority: "High" | "Medium" | "Low"; status: "Idea" | "Planned" | "In next version" | "Done" }
 export interface Announcement { id: string; env: "FB" | "TF"; title: string; body: string; authorId: string; date: string }
 export interface MentorSession { id: string; mentorId: string; studentId: string; date: string; focus: string; notes: string }
@@ -730,7 +738,47 @@ export interface SafeguardingCase { id: string; opened: string; category: string
 export interface Vacancy { id: string; title: string; department: Staff["department"]; candidates: { name: string; stage: "Applied" | "Screening" | "Interview" | "Offer" | "Hired" }[]; status: "Open" | "Closed" }
 export interface OnboardingRec { id: string; personName: string; kind: "Staff" | "Teaching Fellow"; startDate: string; steps: { label: string; done: boolean; owner: string }[] }
 
+export type RequestDestination = "Operations & HR" | "School Upskilling Manager" | "Future Builders Manager" | "Curriculum Manager" | "Executive";
+
+export type EventType = "School visit" | "Training" | "Future Builders" | "Meeting" | "Interview" | "Curriculum review" | "Deadline" | "Grant obligation" | "Leave";
+
+/** A shared calendar event. Visits, sessions, obligations and leave also appear on the calendar from their own records. */
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  type: EventType;
+  date: string;
+  start?: string;
+  end?: string;
+  location?: string;
+  online?: boolean;
+  /** Simulated Google Meet link (no real integration). */
+  meetLink?: string;
+  organizerId: string;
+  participantIds: string[];
+  /** Participants outside CodeBrave staff, e.g. a principal. */
+  externalParticipants?: string[];
+  agenda?: string;
+  description?: string;
+  related?: { kind: "school" | "cohort" | "project" | "department" | "grant" | "curriculum"; id: string; label: string };
+}
+
+/** Evidence gathered about a published lesson after delivery, and the AI-assisted improvement it leads to. */
+export interface LessonInsight {
+  id: string;
+  curriculumId: string;
+  lessonTitle: string;
+  status: "Monitoring" | "Recommendation ready" | "Approved" | "Published" | "Dismissed";
+  aiReview: { at: string; result: "Passed" | "Passed with notes"; notes: string[] };
+  evidence: { kind: "Teacher feedback" | "Trainer feedback" | "Observation" | "Assessment"; text: string; by: string; date: string }[];
+  recommendation?: { summary: string; changes: string[]; minutes: number; plan: LessonPlan; editedBy?: string };
+  versionId?: string;
+  decidedBy?: string;
+}
+
 export interface DemoData {
+  events: CalendarEvent[];
+  lessonInsights: LessonInsight[];
   assets: Asset[];
   leave: LeaveEntry[];
   meetings: Meeting[];
