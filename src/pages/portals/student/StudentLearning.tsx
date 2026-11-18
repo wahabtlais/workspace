@@ -20,7 +20,9 @@ export function MyLearning() {
   const d = useData();
   const me = useMe();
   const update = useDemo((s) => s.update);
-  const course = d.courses.find((c) => c.env === "FB" && c.pathway === me.pathway);
+  const mine = d.courses.filter((c) => c.env === "FB" && (!c.pathway || c.pathway === me.pathway) && c.cohortIds.includes(me.cohortId));
+  const [sel, setSel] = useState<string | undefined>(undefined);
+  const course = mine.find((c) => c.id === sel) ?? mine.find((c) => c.pathway === me.pathway) ?? mine[0];
   if (!course) return <Card className="p-8 text-center text-muted">Your pathway course hasn’t been published yet. Your trainer will share materials in class.</Card>;
   const v = d.curricula.find((c) => c.id === course.curriculumId)!.versions.find((x) => x.id === course.versionId)!;
   const prog = d.progress.find((x) => x.learnerId === me.id && x.courseId === course.id);
@@ -29,6 +31,7 @@ export function MyLearning() {
   const complete = (lid: string) => { update((x) => { let pr = x.progress.find((y) => y.learnerId === me.id && y.courseId === course.id); if (!pr) { pr = { learnerId: me.id, courseId: course.id, completedLessonIds: [] }; x.progress.push(pr); } pr.completedLessonIds.push(lid); }); toast({ tone: "success", title: "Lesson completed", body: "Nice work! Your progress was saved." }); };
   return (
     <div className="space-y-5">
+      {mine.length > 1 && <div className="flex flex-wrap gap-2">{mine.map((c) => <button key={c.id} onClick={() => setSel(c.id)} className={`rounded-full border px-3 py-1 text-[13px] ${c.id === course.id ? "border-fb bg-fb-50 font-medium text-fb" : "border-line text-muted"}`}>{c.title}</button>)}</div>}
       <div><h1 className="text-[24px] font-semibold">{course.title}</h1><p className="text-[13px] text-muted">Version {v.label} · {done.length} of {total} lessons complete</p><Progress value={(done.length / total) * 100} className="mt-2 max-w-md" /></div>
       {v.modules.map((m, i) => (
         <Card key={m.id}><CardHeader icon={<BookOpen />} title={`Module ${i + 1}: ${m.title}`} />

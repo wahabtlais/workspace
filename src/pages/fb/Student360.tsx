@@ -29,7 +29,8 @@ export default function Student360() {
   const regs = d.registers.filter((r) => r.kind === "fb");
   const team = d.teams.find((t) => t.id === s.teamId);
   const project = d.projects.find((p) => p.id === team?.projectId);
-  const placement = d.placements.find((p) => p.studentId === s.id);
+  const ORDER = ["Shortlisted", "Shared with host", "Interview", "Agreement", "Placed", "Completed"];
+  const placement = d.placements.filter((p) => p.studentId === s.id).sort((a, b) => ORDER.indexOf(b.stage) - ORDER.indexOf(a.stage))[0];
   return (
     <Workspace area="fb" hideSubnav title={s.name} description={`${PATHWAY_LABEL[s.pathway]} · ${d.fbCohorts.find((c) => c.id === s.cohortId)?.name} · age ${s.age}`}
       crumbs={[{ label: "Future Builders", to: "/future-builders" }, { label: "Students", to: "/future-builders/students" }, { label: s.name }]}

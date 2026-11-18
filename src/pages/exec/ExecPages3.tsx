@@ -10,6 +10,7 @@ import { useDemo } from "@/store/demoStore";
 import { toast } from "@/store/uiStore";
 import { useData, useLookup } from "@/store/hooks";
 import { formatDate, uid } from "@/lib/utils";
+import { useLiveIndicators } from "@/lib/indicators";
 import { cn } from "@/lib/utils";
 
 export function Risks() {
@@ -38,12 +39,18 @@ export function Meetings() {
   const d = useData();
   const L = useLookup();
   const update = useDemo((s) => s.update);
+  const inds = useLiveIndicators();
+  const liveAgenda = [
+    ...d.decisions.filter((x) => x.status === "Pending").map((x) => ({ item: `Decide: ${x.title}`, source: "Decisions" })),
+    ...d.risks.filter((r) => r.status !== "Closed" && r.likelihood * r.impact >= 12).map((r) => ({ item: `Risk: ${r.title}`, source: "Risks" })),
+    ...inds.filter((i) => i.live && i.current < i.target * 0.95).map((i) => ({ item: `Off track: ${i.name} (${i.current} vs ${i.target})`, source: "Indicators" })),
+  ];
   return (
     <Workspace area="executive" title="Meetings" description="Agendas built automatically from open risks, pending decisions and off-track indicators. Minutes create follow-up tasks.">
       {d.meetings.map((m) => (
         <Card key={m.id}><CardHeader title={`${m.title} · ${formatDate(m.date, { weekday: "long", day: "numeric", month: "long" })}`} subtitle={m.attendees.map((a) => L.person(a).split(" ")[0]).join(", ")} action={<StatusBadge status={m.status} />} />
           <CardBody className="grid gap-4 lg:grid-cols-3">
-            <div><p className="mb-1 text-[12px] font-semibold uppercase text-subtle">Agenda</p>{m.agenda.map((a) => <p key={a.item} className="text-[13px]">• {a.item} <Badge tone="outline" className="ml-1">{a.source}</Badge></p>)}</div>
+            <div><p className="mb-1 text-[12px] font-semibold uppercase text-subtle">Agenda</p>{(m.status === "Upcoming" ? liveAgenda : m.agenda).map((a) => <p key={a.item} className="text-[13px]">• {a.item} <Badge tone="outline" className="ml-1">{a.source}</Badge></p>)}</div>
             <div><p className="mb-1 text-[12px] font-semibold uppercase text-subtle">Decisions</p>{m.decisions.length ? m.decisions.map((x) => <p key={x} className="text-[13px]">• {x}</p>) : <p className="text-[13px] text-muted">To be recorded in the meeting.</p>}</div>
             <div><p className="mb-1 text-[12px] font-semibold uppercase text-subtle">Follow-ups</p>{m.followUps.length ? m.followUps.map((f, i) => <label key={f.text} className="flex items-center gap-2 text-[13px]"><input type="checkbox" checked={f.done} className="accent-brand-600" onChange={() => update((x) => { const ff = x.meetings.find((y) => y.id === m.id)!.followUps[i]; ff.done = !ff.done; })} />{f.text} <span className="text-muted">· {L.person(f.ownerId)}</span></label>) : <p className="text-[13px] text-muted">None yet.</p>}</div>
           </CardBody>

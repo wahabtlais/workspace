@@ -8,7 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDemo } from "@/store/demoStore";
-import { useInbox } from "@/store/hooks";
+import { useData, useInbox, usePersona } from "@/store/hooks";
+import { decideRequest } from "@/store/opsActions";
 import { cn, relativeDay } from "@/lib/utils";
 import { KIND_META } from "./home/widgets";
 
@@ -23,6 +24,8 @@ const FILTERS: { key: string; label: string; kinds?: InboxKind[] }[] = [
 
 export default function Inbox() {
   const items = useInbox();
+  const d = useData();
+  const persona = usePersona();
   const complete = useDemo((s) => s.completeInbox);
   const update = useDemo((s) => s.update);
   const [filter, setFilter] = useState("all");
@@ -66,6 +69,7 @@ export default function Inbox() {
                     <p className="mt-1 text-[12px] text-subtle">From {i.source} · {relativeDay(i.createdAt)}{i.due ? ` · Due ${relativeDay(i.due)}` : ""}</p>
                   </div>
                   <div className="flex shrink-0 gap-2">
+                    {(() => { const rid = (i.title + " " + i.detail).match(/REQ-\d{4}/)?.[0]; const r = rid && d.requests.find((x) => x.id === rid); const mine = r && r.chain.find((c) => c.status === "pending")?.role === persona.role; return i.status === "open" && i.kind === "approval" && mine ? <><Button size="sm" variant="success" onClick={() => decideRequest(rid!, true)}><Check /> Approve</Button><Button size="sm" variant="ghost" onClick={() => decideRequest(rid!, false)}>Reject</Button></> : null; })()}
                     <Button asChild variant="secondary" size="sm"><Link to={i.link}><ExternalLink /> Open</Link></Button>
                     {i.status === "open"
                       ? <Button size="sm" variant="subtle" onClick={() => complete(i.id)}><Check /> Mark done</Button>

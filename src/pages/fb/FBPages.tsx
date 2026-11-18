@@ -10,6 +10,13 @@ import { StatTile } from "@/components/common/StatTile";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { MiniTable } from "@/pages/staff/home/widgets";
 import { decideCorrection } from "@/store/actions";
+import { useDemo } from "@/store/demoStore";
+import { toast } from "@/store/uiStore";
+
+function logFollowUp(id: string) {
+  useDemo.getState().update((d) => { const f = d.followUps.find((x) => x.id === id); if (f) { f.status = "Done"; f.source = `${f.source} · logged: spoke with student and guardian; agreed attendance plan`; } d.inbox.forEach((i) => { if (i.status === "open" && i.toRole === "fb_po" && i.title.startsWith("Absence follow-up")) i.status = "done"; }); });
+  toast({ tone: "success", title: "Follow-up logged", body: "Recorded on the student profile; the task is closed." });
+}
 import { useData, useLookup, usePersona } from "@/store/hooks";
 import { attendanceRate, attendeeRate } from "@/lib/metrics";
 import { PATHWAY_LABEL } from "@/data/seed/fb";
@@ -37,7 +44,7 @@ export function FBAttendance() {
         ))}</CardBody></Card>
       )}
       <Card><CardHeader title="Absence follow-ups" subtitle="Created automatically after 3 consecutive absences" /><CardBody>
-        <MiniTable empty="No absence follow-ups" head={["Student", "Created", "Owner", "Due", "Status"]} rows={follow.map((f) => [<Link className="font-medium hover:underline" to={`/future-builders/students/${f.studentId}`}>{L.person(f.studentId)}</Link>, formatDate(f.createdAt), L.person(f.ownerId), formatDate(f.due), <StatusBadge status={f.status} />])} />
+        <MiniTable empty="No absence follow-ups" head={["Student", "Created", "Owner", "Due", "Status", ""]} rows={follow.map((f) => [<Link className="font-medium hover:underline" to={`/future-builders/students/${f.studentId}`}>{L.person(f.studentId)}</Link>, formatDate(f.createdAt), L.person(f.ownerId), formatDate(f.due), <StatusBadge status={f.status} />, f.status !== "Done" && ["fb_po", "fb_pm"].includes(persona.role) ? <Button size="sm" variant="secondary" onClick={() => logFollowUp(f.id)}>Log follow-up</Button> : null])} />
       </CardBody></Card>
       <Card><CardHeader title="By student" subtitle="Future Builders 2026–27" /><CardBody>
         <MiniTable head={["Student", "Pathway", "Attendance"]} rows={active.map((s) => ({ s, r: attendeeRate(regs, s.id) })).sort((a, b) => a.r - b.r).map(({ s, r }) => [<Link className="font-medium hover:underline" to={`/future-builders/students/${s.id}`}>{s.name}</Link>, PATHWAY_LABEL[s.pathway], <span className="flex items-center gap-2"><Progress value={r} className="w-24" tone={r < 75 ? "danger" : r < 85 ? "warning" : "success"} /><span className="tabular">{r}%</span></span>])} />

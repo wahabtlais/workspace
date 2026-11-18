@@ -27,6 +27,7 @@ export function admitApplicant(id: string) {
   });
   S().addInbox({ toRole: "fb_po", kind: "task", title: `Collect guardian consent: ${a.name}`, detail: "Account activates only after required consents", link: `/future-builders/students/${sid}`, source: "Consent rule" });
   S().logActivity({ actor: actor(), text: `admitted ${a.name} to Future Builders 2027–28`, area: "Future Builders" });
+  S().update((d) => { if (!d.applicants.some((x) => x.stage === "Decision")) d.inbox.forEach((i) => { if (i.title.startsWith("Admissions decisions")) i.status = "done"; }); });
   toast({ tone: "success", title: `${a.name} admitted`, body: "Admission letter generated. The account stays inactive until a guardian gives consent." });
 }
 
