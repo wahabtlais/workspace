@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   CodeBrave design tokens
+   One visual language across Staff Workspace, Student Portal,
+   TF Learning Portal, Partner Access and the Class Teacher surface.
+   ------------------------------------------------------------------ */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #eef4fc;
+  --color-brand-100: #d9e6f8;
+  --color-brand-200: #b5cdf0;
+  --color-brand-300: #84abe3;
+  --color-brand-400: #5384d2;
+  --color-brand-500: #3366bf;
+  --color-brand-600: #254fa3;
+  --color-brand-700: #1f3f83;
+  --color-brand-800: #1d356b;
+  --color-brand-900: #172a52;
+
+  --color-ink-600: #2d4263;
+  --color-ink-700: #22344f;
+  --color-ink-800: #182841;
+  --color-ink-900: #101d31;
+  --color-ink-950: #0a1424;
+
+  --color-accent-50: #fff8eb;
+  --color-accent-100: #feecc7;
+  --color-accent-400: #f6b04a;
+  --color-accent-500: #ec9420;
+  --color-accent-600: #c97212;
+
+  --color-ai-50: #f4f1ff;
+  --color-ai-100: #e9e3ff;
+  --color-ai-200: #d3c8ff;
+  --color-ai-500: #7152f0;
+  --color-ai-600: #5e3ed9;
+  --color-ai-700: #4c2fb5;
+
+  --color-canvas: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-line: #e3e6eb;
+  --color-line-strong: #cfd4dc;
+  --color-muted: #5f6b7a;
+  --color-subtle: #8a94a3;
+  --color-fg: #18202b;
+
+  --color-su: #0f8a7e;
+  --color-su-50: #e7f6f4;
+  --color-fb: #d2591f;
+  --color-fb-50: #fdf0e8;
+
+  --shadow-card: 0 1px 2px rgb(16 29 49 / 0.04), 0 1px 3px rgb(16 29 49 / 0.06);
+  --shadow-pop: 0 12px 32px -12px rgb(16 29 49 / 0.28), 0 4px 10px -4px rgb(16 29 49 / 0.1);
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-slide-in-right: slide-in-right 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-pop-in: pop-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes slide-in-right { from { transform: translateX(24px); opacity: 0 } to { transform: none; opacity: 1 } }
+  @keyframes pop-in { from { transform: scale(0.97) translateY(4px); opacity: 0 } to { transform: none; opacity: 1 } }
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { background: var(--color-canvas); color: var(--color-fg); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; }
+  [dir="rtl"] { font-family: var(--font-arabic); }
+  :focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
+  h1, h2, h3, h4 { letter-spacing: -0.011em; }
+  ::selection { background: var(--color-brand-100); }
+}
+
+@layer components {
+  .scrollbar-thin { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+  .scrollbar-dark { scrollbar-width: thin; scrollbar-color: var(--color-ink-600) transparent; }
+  .tabular { font-variant-numeric: tabular-nums; }
+}
