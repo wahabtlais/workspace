@@ -8,6 +8,7 @@ import { STATUS_STYLE } from "@/components/attendance/labels";
 import { MiniTable } from "@/pages/staff/home/widgets";
 import { useDemo, nowIso } from "@/store/demoStore";
 import { toast } from "@/store/uiStore";
+import { checkReadyForCertification } from "@/store/tfActions";
 import { useData, useLookup, usePersona } from "@/store/hooks";
 import { attendeeRate, TF_ATTENDANCE_THRESHOLD } from "@/lib/metrics";
 import { DEMO_TODAY, formatDate, relativeDay } from "@/lib/utils";
@@ -59,32 +60,52 @@ const QS = [
   { q: "A good exit ticket checks…", a: ["Attendance", "The lesson objective", "Homework completion"], c: 1 },
 ];
 
+const POST_QS = [
+  { q: "What should a teacher do first when a lesson objective is not met by most pupils?", a: ["Move on to the next unit", "Re-teach using a different approach", "Assign extra homework"], c: 1 },
+  { q: "Which is the best evidence for a pupil pre/post comparison?", a: ["The same assessment taken twice", "Teacher impressions", "Attendance records"], c: 0 },
+  ...QS,
+];
+
+function Quiz({ sessionId, qs, tfId, offline }: { sessionId: string; qs: typeof QS; tfId: string; offline: boolean }) {
+  const update = useDemo((s) => s.update);
+  const [ans, setAns] = useState<Record<number, number>>({});
+  const submit = () => {
+    const score = Math.round((qs.filter((q, i) => ans[i] === q.c).length / qs.length) * 100);
+    update((x) => { const e = x.assessmentSessions.find((s) => s.id === sessionId)!.entries.find((y) => y.subjectId === tfId)!; e.status = offline ? "pending_sync" : "submitted"; e.score = score; e.submittedAt = nowIso(); e.device = "Personal laptop"; e.error = undefined; });
+    if (offline) useDemo.getState().enqueue({ kind: "assessment", label: "TF assessment", refId: `${sessionId}::${tfId}` });
+    else checkReadyForCertification(tfId);
+    toast(offline ? { tone: "warning", title: "Saved on your device", body: "Your answers will be sent when you reconnect." } : { tone: "success", title: `Submitted · ${score}%`, body: "Your trainer’s live tracker and your certification progress updated." });
+  };
+  return (
+    <CardBody className="space-y-4">
+      {qs.map((q, i) => <div key={i}><p className="text-[14px] font-medium">{i + 1}. {q.q}</p><div className="mt-2 grid gap-2 sm:grid-cols-3">{q.a.map((a, j) => <button key={a} onClick={() => setAns((x) => ({ ...x, [i]: j }))} className={cn("rounded-lg border px-3 py-2 text-left text-[13px]", ans[i] === j ? "border-su bg-su-50 font-medium text-su" : "border-line")}>{a}</button>)}</div></div>)}
+      <Button disabled={Object.keys(ans).length < qs.length} onClick={submit}>Submit</Button>
+    </CardBody>
+  );
+}
+
 export function TFAssessments() {
   const d = useData();
   const tf = useTF();
-  const update = useDemo((s) => s.update);
-  const session = d.assessmentSessions.find((s) => s.id === "as-tf-mid");
-  const entry = session?.entries.find((e) => e.subjectId === tf.id);
-  const [ans, setAns] = useState<Record<number, number>>({});
   const offline = useDemo((s) => s.offline);
-  const submit = () => {
-    const score = Math.round((QS.filter((q, i) => ans[i] === q.c).length / QS.length) * 100);
-    update((x) => { const e = x.assessmentSessions.find((s) => s.id === "as-tf-mid")!.entries.find((y) => y.subjectId === tf.id)!; e.status = offline ? "pending_sync" : "submitted"; e.score = score; e.submittedAt = nowIso(); e.device = "Personal laptop"; });
-    if (offline) useDemo.getState().enqueue({ kind: "assessment", label: "TF checkpoint", refId: `as-tf-mid::${tf.id}` });
-    toast(offline ? { tone: "warning", title: "Saved on your device", body: "Your answers will be sent when you reconnect." } : { tone: "success", title: `Submitted · ${score}%`, body: "Your trainer’s live tracker updated." });
-  };
+  const mine = d.assessmentSessions.filter((s) => s.audience === "tf" && s.entries.some((e) => e.subjectId === tf.id));
+  const open = mine.filter((s) => s.status === "Live");
   return (
     <div className="space-y-4">
       <h1 className="text-[24px] font-semibold">Assessments</h1>
-      {session && entry && tf.cohortId === "tfc-2" && (
-        <Card><CardHeader icon={<ClipboardCheck />} title="Mid-training checkpoint" subtitle="Short version for the prototype · auto-scored" action={entry.status === "submitted" || entry.status === "pending_sync" ? <Badge tone={entry.status === "submitted" ? "success" : "warning"}>{entry.status === "submitted" ? `Submitted · ${entry.score}%` : "Waiting to sync"}</Badge> : <Badge tone="info">Open today</Badge>} />
-          {(entry.status === "not_started" || entry.status === "in_progress" || entry.status === "failed") && <CardBody className="space-y-4">
-            {QS.map((q, i) => <div key={i}><p className="text-[14px] font-medium">{i + 1}. {q.q}</p><div className="mt-2 grid gap-2 sm:grid-cols-3">{q.a.map((a, j) => <button key={a} onClick={() => setAns((x) => ({ ...x, [i]: j }))} className={cn("rounded-lg border px-3 py-2 text-left text-[13px]", ans[i] === j ? "border-su bg-su-50 font-medium text-su" : "border-line")}>{a}</button>)}</div></div>)}
-            <Button disabled={Object.keys(ans).length < QS.length} onClick={submit}>Submit checkpoint</Button>
-          </CardBody>}
-        </Card>
-      )}
-      <Card><CardHeader title="History" /><CardBody><MiniTable head={["Assessment", "Date", "Score"]} rows={d.assessmentSessions.filter((s) => s.audience === "tf").map((s) => [s.title, formatDate(s.date), s.entries.find((e) => e.subjectId === tf.id)?.score !== undefined ? `${s.entries.find((e) => e.subjectId === tf.id)!.score}%` : s.status === "Scheduled" ? "Scheduled" : "—"])} /></CardBody></Card>
+      {open.length === 0 && <Card className="p-5 text-[14px] text-muted">No assessment is open right now. The post-training assessment opens when your trainer starts the session.</Card>}
+      {open.map((s) => {
+        const e = s.entries.find((x) => x.subjectId === tf.id)!;
+        const done = e.status === "submitted" || e.status === "pending_sync";
+        return (
+          <Card key={s.id}>
+            <CardHeader icon={<ClipboardCheck />} title={s.title} subtitle={s.phase === "post" ? "Counts toward certification · pass mark 70%" : "Short version for the prototype · auto-scored"} action={done ? <Badge tone={e.status === "submitted" ? "success" : "warning"}>{e.status === "submitted" ? `Submitted · ${e.score}%` : "Waiting to sync"}</Badge> : <Badge tone="info">Open now</Badge>} />
+            {!done && <Quiz sessionId={s.id} qs={s.phase === "post" ? POST_QS : QS} tfId={tf.id} offline={offline} />}
+            {done && s.phase === "post" && <CardBody><p className="text-[13px]">{(e.score ?? 0) >= 70 ? "You passed. Your certification progress has been updated; your Project Manager approves the final decision." : "Below the pass mark. Your trainer will arrange a retake."}</p></CardBody>}
+          </Card>
+        );
+      })}
+      <Card><CardHeader title="History" /><CardBody><MiniTable head={["Assessment", "Date", "Status", "Score"]} rows={mine.map((s) => { const e = s.entries.find((x) => x.subjectId === tf.id)!; return [s.title, formatDate(s.date), s.status, e.score !== undefined ? `${e.score}%` : "—"]; })} /></CardBody></Card>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { attendeeRate, TF_ATTENDANCE_THRESHOLD } from "@/lib/metrics";
 import { addDays, DEMO_TODAY, uid } from "@/lib/utils";
 import { nowIso, useDemo } from "./demoStore";
 import { toast } from "./uiStore";
+import { checkReadyForCertification } from "./tfActions";
 
 const S = () => useDemo.getState();
 const me = (): Persona => getPersona(S().personaId);
@@ -190,6 +191,7 @@ export function closeSession(sessionId: string) {
   if (open.length) { toast({ tone: "danger", title: "Can’t close yet", body: `${open.length} learner${open.length === 1 ? "" : "s"} still need a submission or a reason.` }); return false; }
   S().update((d) => { const x = d.assessmentSessions.find((y) => y.id === sessionId)!; x.status = "Closed"; x.closedAt = nowIso(); x.closedBy = actorName(); });
   S().logActivity({ actor: actorName(), text: `closed ${s.title} after reconciliation`, area: "Assessment Hub" });
+  if (s.audience === "tf") S().data.tfs.filter((t) => s.entries.some((e) => e.subjectId === t.id)).forEach((t) => checkReadyForCertification(t.id));
   if (s.audience === "pupils") S().notify({ toRole: "su_pm", text: `${s.title} closed for a class: annual results updated`, link: "/results/annual", tone: "success" });
   toast({ tone: "success", title: "Session closed", body: "Results are final and now count in reporting." });
   return true;

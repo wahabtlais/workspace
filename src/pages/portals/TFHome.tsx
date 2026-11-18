@@ -44,6 +44,11 @@ function InTraining() {
           <Button asChild><Link to="/tf/assessments">Start checkpoint</Link></Button>
         </div>
       )}
+      {tf.certifiedAt && (
+        <Link to="/tf/certificate" className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <Award className="size-6 text-emerald-700" /><span className="flex-1"><span className="block font-semibold">You are a certified Teaching Fellow</span><span className="text-[13px] text-muted">Certified {formatDate(tf.certifiedAt, { day: "numeric", month: "long" })} · view your certificate · deployment comes next</span></span>
+        </Link>
+      )}
       <div className="grid gap-4 sm:grid-cols-3">
         <StatTile label="Course progress" value={`${done}/${lessons.length}`} sub="lessons completed" progress={(done / lessons.length) * 100} to="/tf/training" />
         <StatTile label="Training attendance" value={`${rate}%`} target={`${TF_ATTENDANCE_THRESHOLD}%`} progress={rate} tone={rate < TF_ATTENDANCE_THRESHOLD ? "danger" : "success"} to="/tf/attendance" />
@@ -79,7 +84,7 @@ function Deployed() {
           <Badge tone="success" dot>Certified Teaching Fellow</Badge>
         </div>
       </Card>
-      <TodayClasses basePath="/tf" showLang />
+      {d.classes.some((c) => c.teacherId === tf.id) ? <TodayClasses basePath="/tf" showLang /> : <Card className="p-5 text-[14px] text-muted">Your Project Officer will assign your classes and timetable at {school?.name}. They will appear here, with registers and pupil assessments.</Card>}
       <Card>
         <CardHeader icon={<Eye />} title="Observation feedback" subtitle="From your Project Officer’s classroom visits" />
         <CardBody className="space-y-2">
@@ -97,5 +102,6 @@ function Deployed() {
 
 export default function TFHome() {
   const p = usePersona();
-  return p.id === "p-tf-deployed" ? <Deployed /> : <InTraining />;
+  const tf = useData().tfs.find((t) => t.id === p.scope.tfId);
+  return tf?.stage === "Deployed" ? <Deployed /> : <InTraining />;
 }
