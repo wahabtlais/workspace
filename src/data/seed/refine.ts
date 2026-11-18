@@ -57,6 +57,10 @@ const NOTES = [
 export function refine(d: DemoData) {
   d.events = buildEvents();
   d.lessonInsights = buildInsights();
+  for (const c of d.curricula.filter((x) => x.id === "cur-cls")) for (const v of c.versions) for (const m of v.modules) for (const l of m.lessons) if (l.title === "My first animation") {
+    l.minutes = 45;
+    l.plan = { objectives: "Pupils create a short animation using sequences of blocks, and explain the order of their steps.", activities: ["Warm-up (5 min): recap of sequences", "Demo (10 min): teacher builds a moving character", "Build (25 min): pupils create their own animation on a tablet", "Reflection (5 min): pupils explain their sequence to a partner"], materials: "Tablets with the block-coding app, projector", differentiation: "Support: rebuild a finished example. Challenge: add a second character.", assessment: "Observation during the build; linked to pre/post item 4." };
+  }
 
   // Delivery feedback on a lesson that passed review before publication.
   d.trainerFeedback.push(

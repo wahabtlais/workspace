@@ -190,6 +190,21 @@ export function contextualResponse(p: string, persona: Persona, d: DemoData, con
     };
   }
 
+  if (has(p, "suggest improvement", "improve this lesson", "improvements for")) {
+    const title = p.match(/[“"](.+?)[”"]/)?.[1] ?? context?.replace(/^Lesson:\s*/, "") ?? "the lesson";
+    return {
+      agent: "Curriculum Agent",
+      steps: ["Reading the lesson plan", "Reading feedback, observations and assessment results", "Drafting changes"],
+      blocks: [
+        { kind: "bullets", title: `Suggested improvements: ${title}`, items: ["Start with a short unplugged warm-up while devices are handed out", "Use pair roles (driver / navigator) so one device per pair is enough", "Provide a starter project so time goes into the learning objective, not setup", "Keep reflection as a short exit ticket linked to the pre/post item"] },
+        { kind: "notice", tone: "governance", text: "These are suggestions. Open the lesson to review the full recommendation, edit it and decide. AI never publishes curriculum." },
+      ],
+      sources: [{ label: "Lessons with recurring difficulties", link: "/curriculum" }, { label: "Teacher & trainer feedback", link: "/curriculum/feedback" }],
+      reasoning: "Changes target the causes named most often in the evidence: lost time and shared devices.",
+      dataUsed: ["standard"],
+    };
+  }
+
   if (has(p, "feedback") && has(p, "analy", "summar", "theme")) {
     const fb = d.trainerFeedback;
     const byLesson = [...new Set(fb.map((f) => f.lessonTitle))].map((l) => { const xs = fb.filter((f) => f.lessonTitle === l); return { l, n: xs.length, r: avg(xs.map((x) => x.rating)) }; }).sort((a, b) => a.r - b.r);

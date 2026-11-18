@@ -46,7 +46,7 @@ export const STAFF_NAV: NavGroup[] = [
     items: [
       { label: "Curriculum", path: "/curriculum", icon: BookOpen, area: "curriculum", children: [
         c("Overview", "/curriculum"), c("Frameworks", "/curriculum/frameworks"), c("Curricula & builder", "/curriculum/curricula"),
-        c("Lesson plans", "/curriculum/lesson-plans"), c("Assessments & rubrics", "/curriculum/assessments"), c("Resources", "/curriculum/resources"),
+        c("Lessons", "/curriculum/lesson-plans"), c("Assessments & rubrics", "/curriculum/assessments"), c("Resources", "/curriculum/resources"),
         c("Reviews", "/curriculum/reviews"), c("Publishing", "/curriculum/publishing"), c("Trainer feedback", "/curriculum/feedback"),
         c("Outcomes", "/curriculum/outcomes"), c("Improvement backlog", "/curriculum/backlog"),
       ] },

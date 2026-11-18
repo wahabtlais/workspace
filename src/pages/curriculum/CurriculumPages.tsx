@@ -11,6 +11,7 @@ import { MiniTable } from "@/pages/staff/home/widgets";
 import { VERSION_LABEL } from "@/pages/staff/home/panelsLearning";
 import { useData } from "@/store/hooks";
 import { envFor } from "./CurriculumDetail";
+import { QualityOverview } from "./Lessons";
 
 export const V_TONE = { draft: "neutral", in_review: "warning", approved: "info", published: "success" } as const;
 
@@ -27,7 +28,9 @@ export function CurriculumOverview() {
   const versions = curs.flatMap((x) => x.versions);
   return (
     <Workspace area="curriculum" title="Curriculum Management" description="Two collections, one process: draft → review → approve → publish → learn → improve." meta={switcher}
-      aiActions={<AIAction label="Summarise trainer feedback" prompt="Summarise trainer feedback themes" context="Curriculum" />}>
+      aiActions={<AIAction label="Analyze teacher and trainer feedback" prompt="Analyze teacher and trainer feedback themes" context="Curriculum" />}>
+      <QualityOverview />
+      <h2 className="text-[16px] font-semibold">Curricula in this collection</h2>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Curricula" value={curs.length} sub={`${d.objectives.filter((o) => o.collection === c).length} objectives in the framework`} icon={<BookOpen />} to="/curriculum/curricula" />
         <StatTile label="In review" value={versions.filter((v) => v.status === "in_review").length} tone="warning" to="/curriculum/reviews" />
