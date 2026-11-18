@@ -70,7 +70,7 @@ export const STAFF_NAV: NavGroup[] = [
         c("Decisions", "/executive/decisions"), c("Meetings", "/executive/meetings"), c("Reports", "/executive/reports"),
       ] },
       { label: "Results & Indicators", path: "/results", icon: Target, area: "results", children: [
-        c("Indicator library", "/results"), c("Targets", "/results/targets"), c("Annual results", "/results/annual"), c("Evidence library", "/results/evidence"),
+        c("Dashboard", "/results"), c("Indicator library", "/results/library"), c("Targets", "/results/targets"), c("Annual results", "/results/annual"), c("Evidence library", "/results/evidence"),
       ] },
       { label: "Fundraising & Partnerships", path: "/fundraising", icon: HandCoins, area: "fundraising", children: [
         c("Overview", "/fundraising"), c("Donors & partners", "/fundraising/donors"), c("Opportunities", "/fundraising/opportunities"),

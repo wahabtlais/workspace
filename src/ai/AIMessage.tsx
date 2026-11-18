@@ -16,7 +16,7 @@ import type { Block } from "./types";
 const DATA_LABEL: Record<string, string> = { standard: "General organizational data", "staff-HR": "Staff HR data", "learner-PII": "Learner records (pseudonymised)", "minor-PII": "Minor learner data", "pupil-data": "Pupil data (aggregated only)", safeguarding: "Safeguarding (never used)", financial: "Financial data" };
 
 /** Simple, readable horizontal bars. Highlighted bars carry a text marker, so colour is never the only signal. */
-export function BarList({ data, unit, max }: { data: { label: string; value: number; flag?: boolean }[]; unit?: string; max?: number }) {
+export function BarList({ data, unit, max, suffix = "" }: { data: { label: string; value: number; flag?: boolean }[]; unit?: string; max?: number; suffix?: string }) {
   const top = max ?? Math.max(...data.map((d) => Math.abs(d.value)), 1);
   return (
     <div className="space-y-1.5">
@@ -24,7 +24,7 @@ export function BarList({ data, unit, max }: { data: { label: string; value: num
         <div key={d.label} className="grid grid-cols-[minmax(0,10rem)_1fr_auto] items-center gap-2 text-[12px] sm:grid-cols-[minmax(0,14rem)_1fr_auto]">
           <span className="truncate text-muted" title={d.label}>{d.label}</span>
           <span className="h-2.5 rounded-full bg-canvas"><span className={cn("block h-2.5 rounded-full", d.flag ? "bg-amber-500" : "bg-brand-500")} style={{ width: `${Math.max(2, (Math.abs(d.value) / top) * 100)}%` }} /></span>
-          <span className={cn("tabular w-14 text-right font-medium", d.flag && "text-amber-800")}>{d.value > 0 && unit === "%" ? "+" : ""}{d.value}{unit === "%" ? "%" : ""}{d.flag ? " ▲" : ""}</span>
+          <span className={cn("tabular w-14 text-right font-medium", d.flag && "text-amber-800")}>{d.value > 0 && unit === "%" ? "+" : ""}{d.value}{unit === "%" ? "%" : suffix}{d.flag ? " ▲" : ""}</span>
         </div>
       ))}
     </div>
