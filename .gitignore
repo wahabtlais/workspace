@@ -1,6 +1,27 @@
+# Dependencies
 node_modules
+
+# Build output (rebuilt where it is deployed)
 dist
-*.local
-.vite
+dist-ssr
 *.tsbuildinfo
+.vite
+
+# Local environment files and secrets (never commit)
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+
+# Logs and caches
+*.log
+npm-debug.log*
+.eslintcache
+coverage
+
+# Editors and OS files
+.idea
 .DS_Store
+Thumbs.db

@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       { path: "/partner", element: <PartnerLayout />, children: [{ index: true, element: <PartnerHome /> }, ...partnerRoutes, { path: "*", element: <PortalSection /> }] },
     ],
   },
-]);
+], { basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" });
 
 export default function App() {
   return <RouterProvider router={router} />;

@@ -1,0 +1,32 @@
+# Example Caddy configuration for the CodeBrave prototype (static single-page app).
+# Copy, then replace the placeholders. Nothing here is specific to any server.
+#
+#   prototype.example.org      -> your domain (Caddy obtains HTTPS automatically)
+#   /var/www/codebrave/current -> the folder that contains index.html (the contents of dist/)
+
+prototype.example.org {
+	root * /var/www/codebrave/current
+	encode zstd gzip
+
+	# Optional password protection (recommended: the prototype is for invited reviewers).
+	# Generate a hash with:  caddy hash-password
+	# basic_auth {
+	# 	reviewer <PASTE_BCRYPT_HASH_HERE>
+	# }
+
+	# Built files have content hashes in their names, so they can be cached for a long time.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# index.html must always be revalidated so updates appear immediately.
+	@html not path /assets/*
+	header @html Cache-Control "no-cache"
+
+	# Keep the prototype out of search engines.
+	header X-Robots-Tag "noindex, nofollow"
+
+	# SPA fallback: unknown paths (e.g. /school-upskilling/schools/sch-01) return index.html,
+	# and React Router renders the right page in the browser.
+	try_files {path} /index.html
+	file_server
+}

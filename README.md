@@ -6,9 +6,15 @@ A complete, navigable prototype of the CodeBrave platform for stakeholder review
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173 (use --port to change)
-npm run build      # typecheck + production build
+npm run dev        # http://localhost:5180
+npm run build      # typecheck + production build into dist/
+npm run preview    # serve dist/ at http://localhost:4173
 ```
+
+## Documentation
+
+- [Platform user guide and capabilities reference](docs/CODEBRAVE_PLATFORM_GUIDE.md)
+- [Deployment (static hosting with Caddy or Nginx)](docs/DEPLOYMENT.md)
 
 ## What is in place (Phase A)
 
