@@ -7,12 +7,13 @@ import { DataTable } from "@/components/data/DataTable";
 import { Board } from "@/components/data/Board";
 import { useData, useLookup } from "@/store/hooks";
 import { formatDate } from "@/lib/utils";
+import { AIMenu } from "@/components/shell/AskPanel";
 
 export function Directory() {
   const d = useData();
   const L = useLookup();
   return (
-    <Workspace area="operations" title="People directory" description="Everyone at CodeBrave, with role, department and manager. Contracts and personal records are restricted to HR.">
+    <Workspace area="operations" title="People directory" description="Everyone at CodeBrave, with role, department and manager. Contracts and personal records are restricted to HR." aiActions={<AIMenu context="Operations & HR" items={[{ label: "Analyze an operational spreadsheet", prompt: "Analyze this spreadsheet for trends and anomalies" }, { label: "Summarize requests", prompt: "Summarise open requests" }, { label: "Suggest process improvements", prompt: "Find the bottlenecks in our requests and suggest process improvements" }, { label: "Draft an email", prompt: "Draft an email to Finance about the possible duplicate internet invoice" }, { label: "Prepare meeting notes", prompt: "Summarize these meeting notes" }]} />}>
       <DataTable rows={d.staff} search={(s) => `${s.name} ${s.title}`} filters={[{ key: "d", label: "Department", options: [...new Set(d.staff.map((s) => s.department))], get: (s) => s.department }]}
         columns={[
           { key: "n", header: "Name", sort: (s) => s.name, cell: (s) => <span className="flex items-center gap-2"><Avatar name={s.name} size={28} /><span><span className="block font-medium">{s.name}</span><span className="text-[12px] text-muted">{s.email}</span></span></span> },

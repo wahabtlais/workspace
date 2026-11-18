@@ -6,9 +6,10 @@ import { DataTable } from "@/components/data/DataTable";
 import { FundraisingPanel } from "@/pages/staff/home/panelsOrg";
 import { useData, useLookup } from "@/store/hooks";
 import { formatDate } from "@/lib/utils";
+import { AIMenu } from "@/components/shell/AskPanel";
 
 export function FundOverview() {
-  return <Workspace area="fundraising" title="Fundraising & Partnerships" description="Pipeline, grants, obligations and evidence, connected to live program indicators."><FundraisingPanel /></Workspace>;
+  return <Workspace area="fundraising" title="Fundraising & Partnerships" description="Pipeline, grants, obligations and evidence, connected to live program indicators." aiActions={<AIMenu context="Fundraising" items={[{ label: "Research funding opportunities", prompt: "Research funding opportunities that fit us" }, { label: "Analyze eligibility", prompt: "Check eligibility for Girls in Tech Futures 2027" }, { label: "Draft a proposal", prompt: "Draft a proposal for Girls in Tech Futures 2027" }, { label: "Prepare a donor report", prompt: "Draft the semi-annual report for Northbridge" }]} />}><FundraisingPanel /></Workspace>;
 }
 
 export function Donors() {

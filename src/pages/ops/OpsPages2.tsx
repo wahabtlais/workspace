@@ -6,6 +6,7 @@ import { DataTable } from "@/components/data/DataTable";
 import { MiniTable } from "@/pages/staff/home/widgets";
 import { useData, useLookup } from "@/store/hooks";
 import { formatDate } from "@/lib/utils";
+import { AIMenu } from "@/components/shell/AskPanel";
 
 export function Leave() {
   const d = useData();
@@ -33,7 +34,7 @@ export function OpsTasks() {
   const d = useData();
   const L = useLookup();
   return (
-    <Workspace area="operations" title="Projects & tasks" description="The shared Work service: tasks from every workspace, with owners and due dates.">
+    <Workspace area="operations" title="Projects & tasks" description="The shared Work service: tasks from every workspace, with owners and due dates." aiActions={<AIMenu context="Operations & HR" items={[{ label: "Plan my week", prompt: "Help me plan my week" }, { label: "Suggest process improvements", prompt: "Find the bottlenecks in our requests and suggest process improvements" }]} />}>
       <DataTable rows={d.followUps} search={(f) => f.title} filters={[{ key: "p", label: "Program", options: ["SU", "FB"], get: (f) => f.program }, { key: "s", label: "Status", options: ["Open", "In progress", "Done"], get: (f) => f.status }]}
         columns={[{ key: "t", header: "Task", cell: (f) => <span className="font-medium">{f.title}</span> }, { key: "o", header: "Owner", cell: (f) => L.person(f.ownerId) }, { key: "d", header: "Due", sort: (f) => f.due, cell: (f) => formatDate(f.due) }, { key: "s", header: "Status", cell: (f) => <StatusBadge status={f.status} /> }]} />
     </Workspace>

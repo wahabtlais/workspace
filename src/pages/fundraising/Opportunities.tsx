@@ -11,6 +11,7 @@ import { toast } from "@/store/uiStore";
 import { useData, useLookup } from "@/store/hooks";
 import { formatDate, relativeDay } from "@/lib/utils";
 import { createDecision } from "@/store/execActions";
+import { AIMenu } from "@/components/shell/AskPanel";
 
 const STAGES: FundOpportunity["stage"][] = ["Identified", "Qualifying", "Drafting", "Submitted", "Awarded", "Declined"];
 const DEFAULT_CHECKS = ["Registered non-profit for 3+ years", "Program fits the call’s focus", "Works with the target age group", "Audited accounts for last 2 years", "Co-funding requirement can be met"];
@@ -44,7 +45,7 @@ export default function Opportunities() {
   const update = useDemo((s) => s.update);
   const [sel, setSel] = useState<FundOpportunity | null>(null);
   return (
-    <Workspace area="fundraising" title="Opportunities" description="Pipeline from identified to awarded. Open a card to run an eligibility check; drag to change stage.">
+    <Workspace area="fundraising" title="Opportunities" description="Pipeline from identified to awarded. Open a card to run an eligibility check; drag to change stage." aiActions={<AIMenu context="Opportunities" items={[{ label: "Research funding opportunities", prompt: "Research funding opportunities that fit us" }, { label: "Analyze eligibility", prompt: "Check eligibility for Girls in Tech Futures 2027" }, { label: "Draft a proposal", prompt: "Draft a proposal for Girls in Tech Futures 2027" }]} />}>
       <Board columns={STAGES} items={d.opportunities} getColumn={(o) => o.stage} onMove={(o, to) => update((x) => { x.opportunities.find((y) => y.id === o.id)!.stage = to as FundOpportunity["stage"]; })}
         renderCard={(o) => (
           <button onClick={() => setSel(d.opportunities.find((x) => x.id === o.id)!)} className="block w-full text-left">

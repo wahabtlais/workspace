@@ -10,6 +10,7 @@ import { MiniTable } from "@/pages/staff/home/widgets";
 import { useData, useLookup } from "@/store/hooks";
 import { PATHWAY_LABEL } from "@/data/seed/fb";
 import { formatDate } from "@/lib/utils";
+import { AIMenu } from "@/components/shell/AskPanel";
 
 export function Portfolios() {
   const d = useData();
@@ -56,7 +57,7 @@ export function Mentorship() {
   const L = useLookup();
   const mentors = [...new Set(d.students.map((s) => s.mentorId).filter(Boolean))] as string[];
   return (
-    <Workspace area="fb" title="Mentorship" description="Mentor pool, matching and session logs. Mentors see their mentees only.">
+    <Workspace area="fb" title="Mentorship" description="Mentor pool, matching and session logs. Mentors see their mentees only." aiActions={<AIMenu context="Mentorship" items={[{ label: "Prepare mentorship summaries", prompt: "Prepare mentorship summaries" }, { label: "Identify learners needing support", prompt: "Which students are at risk?" }]} />}>
       <div className="grid gap-4 md:grid-cols-3">
         {mentors.map((m) => <Card key={m} className="p-4"><p className="font-semibold">{L.person(m)}</p><p className="text-[13px] text-muted">{d.students.filter((s) => s.mentorId === m).length} mentees · {d.mentorSessions.filter((x) => x.mentorId === m).length} sessions logged</p></Card>)}
       </div>

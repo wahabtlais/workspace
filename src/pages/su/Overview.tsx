@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { StatTile } from "@/components/common/StatTile";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Workspace } from "@/components/common/Workspace";
-import { AIAction } from "@/components/shell/AskPanel";
+import { AIMenu } from "@/components/shell/AskPanel";
+import { MySchools } from "./MySchools";
 import { useData, useLookup } from "@/store/hooks";
 import { attendanceRate, registerCompletion } from "@/lib/metrics";
 import { DEMO_TODAY, formatDate, relativeDay } from "@/lib/utils";
@@ -22,8 +23,9 @@ export default function SUOverview() {
   const sessions = d.assessmentSessions.filter((s) => s.audience === "pupils");
   return (
     <Workspace area="su" title="School Upskilling" description="Partner schools, Teaching Fellows, classroom delivery and results in one place."
-      aiActions={<AIAction label="Draft monthly report" prompt="Draft the School Upskilling monthly report" context="School Upskilling" />}
+      aiActions={<AIMenu context="School Upskilling" items={[{ label: "Analyze observations across schools", prompt: "Analyze observations across schools" }, { label: "Consolidate recurring challenges", prompt: "Consolidate recurring challenges from my visit reports into an improvement brief" }, { label: "Identify missing assessment submissions", prompt: "Show assessment submission status" }, { label: "Which schools need a visit?", prompt: "Which schools haven’t been visited this month?" }, { label: "Draft monthly report", prompt: "Draft the School Upskilling monthly report" }]} />}
       actions={<Button asChild><Link to="/school-upskilling/visits">Plan a visit</Link></Button>}>
+      <MySchools />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Active partner schools" value={d.schools.filter((s) => s.status === "Active").length} sub={`${d.classes.length} classes · ${d.pupils.length} pupils`} icon={<School />} to="/school-upskilling/schools" />
         <StatTile label="Pupil attendance (term)" value={`${attendanceRate(pupilRegs)}%`} target="85%" progress={attendanceRate(pupilRegs)} icon={<CalendarCheck />} to="/school-upskilling/reports" />

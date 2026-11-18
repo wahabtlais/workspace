@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/misc";
 import { StatTile } from "@/components/common/StatTile";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Workspace } from "@/components/common/Workspace";
-import { AIAction } from "@/components/shell/AskPanel";
+import { AIMenu } from "@/components/shell/AskPanel";
 import { useData } from "@/store/hooks";
 import { attendanceRate, attendeeRate } from "@/lib/metrics";
 import { PATHWAY_LABEL } from "@/data/seed/fb";
@@ -20,7 +20,7 @@ export default function FBOverview() {
   const upcoming = d.fbSessions.filter((s) => s.date >= DEMO_TODAY).slice(0, 5);
   return (
     <Workspace area="fb" title="Future Builders" description="Ages 15–18 · AI & machine learning, web development and entrepreneurship · real client projects and internships."
-      aiActions={<AIAction label="Draft monthly report" prompt="Draft the Future Builders monthly report" />}>
+      aiActions={<AIMenu context="Future Builders" items={[{ label: "Summarize cohort progress", prompt: "Summarise cohort progress" }, { label: "Identify learners needing support", prompt: "Which students are at risk?" }, { label: "Analyze project progress", prompt: "Analyze project progress" }, { label: "Prepare mentorship summaries", prompt: "Prepare mentorship summaries" }, { label: "Draft monthly report", prompt: "Draft the Future Builders monthly report" }]} />}>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Active students" value={active.length} sub="Future Builders 2026–27" icon={<Users />} to="/future-builders/students" />
         <StatTile label="Session attendance" value={`${attendanceRate(regs)}%`} target="85%" progress={attendanceRate(regs)} icon={<CalendarCheck />} to="/future-builders/attendance" />
