@@ -39,8 +39,8 @@ export function TopBar() {
       </button>
       <div className="ml-auto flex items-center gap-1 sm:gap-1.5">
         <SyncStatus />
-        <Button variant="ai" size="sm" onClick={() => setAsk(true)} className="hidden sm:inline-flex"><Sparkles /> Ask CodeBrave</Button>
-        <Button variant="ai" size="icon-sm" onClick={() => setAsk(true)} className="sm:hidden" aria-label="Ask CodeBrave"><Sparkles /></Button>
+        <Button variant="ai" size="sm" onClick={() => setAsk(true)} className="hidden sm:inline-flex"><Sparkles /> Ask AI</Button>
+        <Button variant="ai" size="icon-sm" onClick={() => setAsk(true)} className="sm:hidden" aria-label="Ask AI"><Sparkles /></Button>
         <NotificationsPopover />
         <Link to="/inbox" className="relative rounded-lg p-2 text-muted hover:bg-canvas hover:text-fg" aria-label={`Inbox, ${inboxCount} open`}>
           <Inbox className="size-[18px]" />

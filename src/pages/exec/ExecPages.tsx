@@ -7,25 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/misc";
 import { Workspace } from "@/components/common/Workspace";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { AIAction } from "@/components/shell/AskPanel";
-import { ExecPanel } from "@/pages/staff/home/panelsSU";
-import { MiniTable } from "@/pages/staff/home/widgets";
+import { AIMenu } from "@/components/shell/AskPanel";
+import { ExecCockpit } from "./Cockpit";
 import { useData, useLookup, usePersona } from "@/store/hooks";
-import { formatDate, relativeDay } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { useLiveIndicators } from "@/lib/indicators";
 import { decideDecision } from "@/store/execActions";
 
 
 export function ExecOverview() {
-  const d = useData();
   return (
-    <Workspace area="executive" title="Executive overview" description="A working space for leadership: what is on and off track, what needs a decision, and what is due."
-      aiActions={<AIAction label="Draft management report" prompt="Draft the monthly management report" />}>
-      <ExecPanel />
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Card><CardHeader title="Top risks" action={<Link to="/executive/risks" className="text-[13px] text-brand-600 hover:underline">All risks</Link>} /><CardBody><MiniTable head={["Risk", "Score", "Status"]} rows={[...d.risks].sort((a, b) => b.likelihood * b.impact - a.likelihood * a.impact).slice(0, 4).map((r) => [r.title, <Badge tone={r.likelihood * r.impact >= 12 ? "danger" : "warning"}>{r.likelihood * r.impact}</Badge>, <StatusBadge status={r.status} />])} /></CardBody></Card>
-        <Card><CardHeader title="Donor obligations" action={<Link to="/fundraising/obligations" className="text-[13px] text-brand-600 hover:underline">Calendar</Link>} /><CardBody><MiniTable head={["Obligation", "Due", "Status"]} rows={d.obligations.filter((o) => o.status !== "Submitted").sort((a, b) => a.due.localeCompare(b.due)).slice(0, 4).map((o) => [o.title, relativeDay(o.due), <StatusBadge status={o.status} />])} /></CardBody></Card>
-      </div>
+    <Workspace area="executive" title="Executive cockpit" description="Program health, decisions, off-track indicators, risks and what is coming up. Drill down to the evidence or ask a manager to act."
+      aiActions={<AIMenu context="Executive" items={[{ label: "Generate executive briefing", prompt: "Give me this week's executive briefing" }, { label: "Explain indicator changes", prompt: "Explain the change in observation scores and learning gain" }, { label: "Identify risks and opportunities", prompt: "What are our top risks and opportunities?" }, { label: "Suggest strategic actions", prompt: "Suggest strategic actions" }]} />}>
+      <ExecCockpit full />
     </Workspace>
   );
 }
